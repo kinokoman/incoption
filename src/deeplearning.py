@@ -14,7 +14,7 @@ sys.setdefaultencoding('utf-8')
 
 NUM_DIGITS = 10
 NUM_HIDDEN = 100
-BATCH_SIZE = 10 #128
+BATCH_SIZE = 128 #10
 OPT_RATE = 0.0001
 LOG_PATH = './log/'
 
@@ -27,12 +27,8 @@ class DeepLearning:
 
     def main(self):
         data = DataFizzBuzz().main()
-
-        print data[0].shape[1]
-        
-        1/0
-
-        #self.test(trX, trY)
+        X, Y, Y_ = self.design_network(data)
+        self.train_model(data, X, Y, Y_)
 
 
     def train(self):
@@ -41,34 +37,35 @@ class DeepLearning:
         self.train_model(df_, X, Y, Y_)
 
 
-    def design_network(self, df_):
+    def design_network(self, data):
         # Set parameters.
-        n_data = data[0].shape[1]
-        n_label = data[1].shape[1]
-        #n_hidden = [50, 50]
+        n_X = data[0].shape[1]
+        n_Y = data[1].shape[1]
+        #n_hidden = [100, 100]
         n_hidden = [100]
 
         # Set the model.
         """
-        X  = tf.placeholder(tf.float32, [None, n_data])
-        H1 = self.make_layer(X, n_data, n_hidden[0], 'relu')
-        H2 = self.make_layer(H1, n_hidden[0], n_hidden[1], 'relu')
-        Y  = self.make_layer(H2, n_hidden[1], n_label, 'softmax')
-        Y_ = tf.placeholder(tf.float32, [None, n_label])
+        X  = tf.placeholder(tf.float32, [None, n_X])
+        H1 = self.__make_layer(X, n_X, n_hidden[0], 'relu')
+        H2 = self.__make_layer(H1, n_hidden[0], n_hidden[1], 'relu')
+        Y  = self.__make_layer(H2, n_hidden[1], n_Y, 'softmax')
+        Y_ = tf.placeholder(tf.float32, [None, n_Y]) 
         """
-        X  = tf.placeholder(tf.float32, [None, n_data])
-        H1 = self.make_layer(X, n_data, n_hidden[0], 'relu')
-        Y  = self.make_layer(H1, n_hidden[0], n_label, 'softmax')
-        Y_ = tf.placeholder(tf.float32, [None, n_label])
+
+        X  = tf.placeholder(tf.float32, [None, n_X])
+        H1 = self.__make_layer(X, n_X, n_hidden[0], 'relu')
+        Y  = self.__make_layer(H1, n_hidden[0], n_Y, '')
+        Y_ = tf.placeholder(tf.float32, [None, n_Y])
         
         return X, Y, Y_
 
 
-    def make_layer(self, I, n_input, n_output, activ_func):
-        #W = tf.Variable(tf.random_normal(shape, stddev=0.01))
+    def __make_layer(self, I, n_input, n_output, activ_func):
+        W = tf.Variable(tf.random_normal([n_input, n_output], stddev=0.01))
         #W = tf.Variable(tf.zeros([n_input, n_output]))
         #B = tf.Variable(tf.zeros([n_output]))
-        W = tf.Variable(tf.truncated_normal([n_input, n_output], stddev=0.01))
+        #W = tf.Variable(tf.truncated_normal([n_input, n_output], stddev=0.01))
         B = tf.Variable(tf.ones([n_output]))
 
         if activ_func == 'tanh':
@@ -77,6 +74,14 @@ class DeepLearning:
             O = tf.nn.relu(tf.matmul(I, W) + B)
         elif activ_func == 'softmax':
             O = tf.nn.softmax(tf.matmul(I, W) + B)
+        else:
+            O = tf.matmul(I, W)
+
+        """
+        w_h = tf.Variable(tf.random_normal(shape, stddev=0.01))
+        h = tf.nn.relu(tf.matmul(X, w_h))
+        nw = tf.matmul(h, w_o)
+        """
 
         return O
 
@@ -98,7 +103,7 @@ class DeepLearning:
         with tf.Session() as sess:
             tf.initialize_all_variables().run()
 
-            for epoch in range(1000):
+            for epoch in range(10000):
                 p = np.random.permutation(range(len(trX)))
                 trX, trY = trX[p], trY[p]
 
@@ -121,48 +126,36 @@ class DeepLearning:
 
     def train_model(self, data, X, Y, Y_):
         # data
-        train_data  = data[0]
-        train_label = data[1]
-        test_data   = data[2]
-        test_label  = data[3]
-
+        train_X = data[0]
+        train_Y = data[1]
+        test_X = data[2]
+        test_Y = data[3]
+        
         # initailize.
         sess = tf.InteractiveSession()
-        saver = tf.train.Saver()
 
         # make equations.
-        #loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(py_x, Y))
-        #train_step = tf.train.GradientDescentOptimizer(0.05).minimize(cost)
-        loss = -tf.reduce_sum(Y_*tf.log(Y))
-        train_step = tf.train.AdamOptimizer(learning_rate=OPT_RATE).minimize(loss)
+        loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
+        train_step = tf.train.GradientDescentOptimizer(0.05).minimize(loss)
+        #loss = -tf.reduce_sum(Y_*tf.log(Y))
+        #train_step = tf.train.AdamOptimizer(learning_rate=OPT_RATE).minimize(loss)
         correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-        # log training process for TensorBoard.
-        writer = tf.train.SummaryWriter(LOG_PATH, sess.graph)
-        tf.histogram_summary('probability of training data', Y)
-        tf.scalar_summary('loss', loss)
-        tf.scalar_summary('accuracy', accuracy)
-
         # Start to train.
         tf.initialize_all_variables().run()
-        for start in range(0, len(train_data.shape[0]), BATCH_SIZE):
-            # Train
-            end = start + BATCH_SIZE
-            sess.run(train_step, feed_dict={X: train_data[start:end], Y: train_label[start:end]})
+
+        for epoch in range(10000):
+            for start in range(0, train_X.shape[0], BATCH_SIZE):
+                # Train
+                end = start + BATCH_SIZE
+                sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
 
             # Test
-            summary, lo55, acc = sess.run([tf.merge_all_summaries(), loss, accuracy], feed_dict={X: test_data, Y_: test_label})
-            writer.add_summary(summary, i)
-            print('Loss and Accuracy at step %s: %s, %s' % (i, lo55, acc))
+            if epoch % 100 == 0:
+                acc = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
+                print epoch, acc
 
-            """
-            if i % 100 == 0:
-                print('Loss and Accuracy at step %s: %s, %s' % (i, lo55, acc))
-                saver.save(sess, "tennis_model.ckpt")
-            """
-
-        #saver.save(sess, "tennis_model.ckpt")
 
 
     def __next_batch(self, df_, index, n):
