@@ -12,9 +12,9 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-NUM_DIGITS = 10
+NUM_DIGITS = 20
 NUM_HIDDEN = 100
-BATCH_SIZE = 128 #10
+BATCH_SIZE = 10 #100
 OPT_RATE = 0.0001
 LOG_PATH = './log/'
 
@@ -26,15 +26,12 @@ class DeepLearning:
 
 
     def main(self):
+        print 'Setting data...'
         data = DataFizzBuzz().main()
+        
+        print 'Training...'
         X, Y, Y_ = self.design_network(data)
         self.train_model(data, X, Y, Y_)
-
-
-    def train(self):
-        df, df_ = Data().main()
-        X, Y, Y_ = self.design_network(df_)
-        self.train_model(df_, X, Y, Y_)
 
 
     def design_network(self, data):
@@ -50,12 +47,12 @@ class DeepLearning:
         H1 = self.__make_layer(X, n_X, n_hidden[0], 'relu')
         H2 = self.__make_layer(H1, n_hidden[0], n_hidden[1], 'relu')
         Y  = self.__make_layer(H2, n_hidden[1], n_Y, 'softmax')
-        Y_ = tf.placeholder(tf.float32, [None, n_Y]) 
+        Y_ = tf.placeholder(tf.float32, [None, n_Y])
         """
 
         X  = tf.placeholder(tf.float32, [None, n_X])
-        H1 = self.__make_layer(X, n_X, n_hidden[0], 'relu')
-        Y  = self.__make_layer(H1, n_hidden[0], n_Y, '')
+        H1 = self.__make_layer(X, n_X, n_hidden[0], 'a')
+        Y  = self.__make_layer(H1, n_hidden[0], n_Y, 'b')
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
         
         return X, Y, Y_
@@ -74,7 +71,9 @@ class DeepLearning:
             O = tf.nn.relu(tf.matmul(I, W) + B)
         elif activ_func == 'softmax':
             O = tf.nn.softmax(tf.matmul(I, W) + B)
-        else:
+        elif activ_func == 'a':
+            O = tf.nn.relu(tf.matmul(I, W) + B)
+        elif activ_func == 'b':
             O = tf.matmul(I, W)
 
         """
@@ -103,7 +102,7 @@ class DeepLearning:
         with tf.Session() as sess:
             tf.initialize_all_variables().run()
 
-            for epoch in range(10000):
+            for epoch in range(1000):
                 p = np.random.permutation(range(len(trX)))
                 trX, trY = trX[p], trY[p]
 
@@ -142,9 +141,28 @@ class DeepLearning:
         correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+        accuracy_train = tf.argmax(Y, 1)
+
         # Start to train.
         tf.initialize_all_variables().run()
 
+        for epoch in range(1000):
+            p = np.random.permutation(range(len(train_X)))
+            train_X, train_Y = train_X[p], train_Y[p]
+
+            for start in range(0, train_X.shape[0], BATCH_SIZE):
+                # Train
+                end = start + BATCH_SIZE
+                sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
+
+            # Test
+            if epoch % 100 == 0:
+                accu = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
+                accu_train = np.mean(np.argmax(train_Y, axis=1) == sess.run(accuracy_train, feed_dict={X: train_X, Y_: train_Y}))
+                print epoch, accu, accu_train
+    
+
+        """
         for epoch in range(10000):
             for start in range(0, train_X.shape[0], BATCH_SIZE):
                 # Train
@@ -153,9 +171,10 @@ class DeepLearning:
 
             # Test
             if epoch % 100 == 0:
-                acc = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
-                print epoch, acc
-
+                accu = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
+                accu_train = np.mean(np.argmax(train_Y, axis=1) == sess.run(accuracy_train, feed_dict={X: train_X, Y_: train_Y}))
+                print epoch, accu, accu_train
+        """
 
 
     def __next_batch(self, df_, index, n):

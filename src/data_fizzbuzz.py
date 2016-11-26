@@ -19,12 +19,21 @@ class DataFizzBuzz:
 
 
     def main(self):
+        # Train
         train_data = np.array([self.binary_encode(i, NUM_DIGITS) for i in range(BORDER, 2**NUM_DIGITS)])
         train_label = np.array([self.fizz_buzz_encode(i) for i in range(BORDER, 2**NUM_DIGITS)])
-
+        
+        """
+        for i in range(14):
+            train_data = np.append(train_data, train_data, axis=0)
+            train_label = np.append(train_label, train_label, axis=0)
+        """
+        
+        # Test
         test_data = np.array([self.binary_encode(i, NUM_DIGITS) for i in range(0, BORDER)])
         test_label = np.array([self.fizz_buzz_encode(i) for i in range(0, BORDER)])
 
+        # Collect
         data = [train_data, train_label, test_data, test_label]
 
         return data
