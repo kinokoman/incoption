@@ -102,7 +102,7 @@ class DeepLearning:
         with tf.Session() as sess:
             tf.initialize_all_variables().run()
 
-            for epoch in range(1000):
+            for epoch in range(10000):
                 p = np.random.permutation(range(len(trX)))
                 trX, trY = trX[p], trY[p]
 
@@ -138,43 +138,26 @@ class DeepLearning:
         train_step = tf.train.GradientDescentOptimizer(0.05).minimize(loss)
         #loss = -tf.reduce_sum(Y_*tf.log(Y))
         #train_step = tf.train.AdamOptimizer(learning_rate=OPT_RATE).minimize(loss)
-        correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
-        accuracy_train = tf.argmax(Y, 1)
-
+        accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
+        
         # Start to train.
         tf.initialize_all_variables().run()
 
-        for epoch in range(1000):
+        for epoch in range(10000):
             p = np.random.permutation(range(len(train_X)))
             train_X, train_Y = train_X[p], train_Y[p]
 
+            # Train
             for start in range(0, train_X.shape[0], BATCH_SIZE):
-                # Train
+
                 end = start + BATCH_SIZE
                 sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
 
             # Test
             if epoch % 100 == 0:
-                accu = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                accu_train = np.mean(np.argmax(train_Y, axis=1) == sess.run(accuracy_train, feed_dict={X: train_X, Y_: train_Y}))
-                print epoch, accu, accu_train
-    
-
-        """
-        for epoch in range(10000):
-            for start in range(0, train_X.shape[0], BATCH_SIZE):
-                # Train
-                end = start + BATCH_SIZE
-                sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
-
-            # Test
-            if epoch % 100 == 0:
-                accu = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
-                accu_train = np.mean(np.argmax(train_Y, axis=1) == sess.run(accuracy_train, feed_dict={X: train_X, Y_: train_Y}))
-                print epoch, accu, accu_train
-        """
+                accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
+                accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
+                print epoch, accu_train, accu_test
 
 
     def __next_batch(self, df_, index, n):
