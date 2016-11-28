@@ -31,11 +31,11 @@ class DeepLearning:
         data = DataFizzBuzz().main()
         
         print 'Training...'
-        X, Y, Y_ = self.design_network(data)
-        self.train_model(data, X, Y, Y_)
+        model = self.design_model(data)
+        self.train_model(data, model)
 
 
-    def design_network(self, data):
+    def design_model(self, data):
         # Set parameters.
         n_X = data[0].shape[1]
         n_Y = data[1].shape[1]
@@ -55,8 +55,12 @@ class DeepLearning:
         H1 = self.__make_layer(X, n_X, n_hidden[0], 'random_normal', 'zeros', 'relu')
         Y  = self.__make_layer(H1, n_hidden[0], n_Y, 'random_normal', 'zeros', '')
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
-        
-        return X, Y, Y_
+
+        loss, train_step, accuracy = self.select_functions(Y, Y_, 0, 0, 0)
+
+        model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'train_step': train_step, 'accuracy': accuracy}
+
+        return model
 
 
     def __make_layer(self, I, n_input, n_output, weight, bias, activ):
@@ -89,24 +93,40 @@ class DeepLearning:
         return O
 
 
-    def train_model(self, data, X, Y, Y_):
+    def select_functions(self, Y, Y_, loss_type, train_type, accuracy_type):
+        if loss_type == 0:
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))  # for FizzBuzz
+        elif loss_type == 1:
+            loss = -tf.reduce_sum(Y_*tf.log(Y))
+        
+        if train_type == 0:
+            train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(loss)  # for FizzBuzz
+        elif train_type == 1:
+            train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(loss)
+    
+        if accuracy_type == 0:
+            accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
+
+        return loss, train_step, accuracy
+
+
+    def train_model(self, data, model):
         # data
         train_X = data[0]
         train_Y = data[1]
         test_X = data[2]
         test_Y = data[3]
+
+        # model
+        X = model['X']
+        Y = model['Y']
+        Y_ = model['Y_']
+        loss = model['loss']
+        train_step = model['train_step']
+        accuracy = model['accuracy']
         
         # initailize.
         sess = tf.InteractiveSession()
-
-        # make equations.
-        loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
-        train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(loss)
-        #loss = -tf.reduce_sum(Y_*tf.log(Y))
-        #train_step = tf.train.AdamOptimizer(learning_rate=OPT_RATE).minimize(loss)
-        accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
-        
-        # Start to train.
         tf.initialize_all_variables().run()
 
         for epoch in range(N_ITER):  # for FizzBuzz
@@ -120,9 +140,10 @@ class DeepLearning:
 
             # Test
             if epoch % 100 == 0:
+                lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
                 accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
                 accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                print epoch, accu_train, accu_test
+                print epoch, lo55, accu_train, accu_test
 
 
 if __name__ == "__main__":
