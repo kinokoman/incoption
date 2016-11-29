@@ -11,9 +11,6 @@ from data_fizzbuzz import DataFizzBuzz
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-
-NUM_DIGITS = 20
-NUM_HIDDEN = 100
 BATCH_SIZE = 100 #100
 OPT_RATE = 0.05 #0.0001
 N_ITER = 10000
@@ -23,6 +20,21 @@ LOG_PATH = './log/'
 
 class DeepLearning:
     def __init__(self):
+        """
+        - layer
+            - num node
+            - weight
+            - bias
+            - activatoin function
+
+        - loss
+            - stddev
+        - train step
+            - opt rate
+
+        - batch size
+        - num iter
+        """
         pass
 
 
@@ -56,9 +68,9 @@ class DeepLearning:
         Y  = self.__make_layer(H1, n_hidden[0], n_Y, 'random_normal', 'zeros', '')
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
 
-        loss, train_step, accuracy = self.select_functions(Y, Y_, 0, 0, 0)
+        loss, train_step = self.select_functions(Y, Y_, 0, 0)
 
-        model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'train_step': train_step, 'accuracy': accuracy}
+        model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'train_step': train_step}
 
         return model
 
@@ -93,7 +105,7 @@ class DeepLearning:
         return O
 
 
-    def select_functions(self, Y, Y_, loss_type, train_type, accuracy_type):
+    def select_functions(self, Y, Y_, loss_type, train_type):
         if loss_type == 0:
             loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))  # for FizzBuzz
         elif loss_type == 1:
@@ -103,11 +115,8 @@ class DeepLearning:
             train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(loss)  # for FizzBuzz
         elif train_type == 1:
             train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(loss)
-    
-        if accuracy_type == 0:
-            accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
 
-        return loss, train_step, accuracy
+        return loss, train_step
 
 
     def train_model(self, data, model):
@@ -123,11 +132,11 @@ class DeepLearning:
         Y_ = model['Y_']
         loss = model['loss']
         train_step = model['train_step']
-        accuracy = model['accuracy']
         
         # initailize.
         sess = tf.InteractiveSession()
         tf.initialize_all_variables().run()
+        accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
 
         for epoch in range(N_ITER):  # for FizzBuzz
             p = np.random.permutation(range(len(train_X)))
