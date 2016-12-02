@@ -82,9 +82,9 @@ class DeepLearning:
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
         
         #loss, train_step = self.select_functions(Y, Y_, 0, 0)  # FizzBuzz
-        loss, train_step = self.select_functions(Y, Y_, 1, 0)  # MNIST for beginner
+        cost, train_step = self.select_functions(Y, Y_, 1, 0)  # MNIST for beginner
 
-        model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'train_step': train_step}
+        model = {'X': X, 'Y': Y, 'Y_': Y_, 'cost': cost, 'train_step': train_step}
 
         return model
 
@@ -119,20 +119,20 @@ class DeepLearning:
         return O
 
 
-    def select_functions(self, Y, Y_, loss_type, train_type):
+    def select_functions(self, Y, Y_, cost_type, train_type):
         # Loss
-        if loss_type == 0:
-            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))  # FizzBuzz
-        elif loss_type == 1:
-            loss = -tf.reduce_sum(Y_*tf.log(Y))  # MNIST for beginner
+        if cost_type == 0:
+            cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))  # FizzBuzz
+        elif cost_type == 1:
+            cost = -tf.reduce_sum(Y_*tf.log(Y))  # MNIST for beginner
 
         # Train step
         if train_type == 0:
-            train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(loss)  # FizzBuzz, MNIST for beginner
+            train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(cost)  # FizzBuzz, MNIST for beginner
         elif train_type == 1:
-            train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(loss)
+            train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(cost)
 
-        return loss, train_step
+        return cost, train_step
 
 
     def train_model(self, data, model):
@@ -146,7 +146,7 @@ class DeepLearning:
         X = model['X']
         Y = model['Y']
         Y_ = model['Y_']
-        loss = model['loss']
+        cost = model['cost']
         train_step = model['train_step']
         
         # initailize.
@@ -154,7 +154,7 @@ class DeepLearning:
         tf.initialize_all_variables().run()
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
 
-        for epoch in range(N_ITER):  # for FizzBuzz
+        for epoch in range(N_ITER):  # FizzBuzz
             p = np.random.permutation(range(len(train_X)))
             train_X, train_Y = train_X[p], train_Y[p]
 
@@ -164,17 +164,18 @@ class DeepLearning:
                 sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
 
                 if start % 100 == 0:
-                    lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
+                    kost = sess.run(cost, feed_dict={X: train_X, Y_: train_Y})
                     accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
                     accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                    print start, lo55, accu_train, accu_test
+                    print start, kost, accu_train, accu_test
+
             # Test
             """
             if epoch % 100 == 0:
-                lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
+                kost = sess.run(cost, feed_dict={X: train_X, Y_: train_Y})
                 accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
                 accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                print epoch, lo55, accu_train, accu_test
+                print epoch, kost, accu_train, accu_test
             """
 
 
