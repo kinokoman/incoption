@@ -12,7 +12,7 @@ from data_mnist import DataMnist
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-BATCH_SIZE = 100 # 
+BATCH_SIZE = 10 # 
 #OPT_RATE = 0.05 # FizzBuzz
 OPT_RATE = 0.01 # MNIST for beginner
 #N_ITER = 10000 # FizzBuzz
@@ -30,7 +30,7 @@ class DeepLearning:
             - bias
             - activatoin function
 
-        - loss
+        - cost
             - stddev
         - train step
             - opt rate
@@ -55,19 +55,17 @@ class DeepLearning:
         # Set parameters.
         n_X = data[0].shape[1]
         n_Y = data[1].shape[1]
-        #n_hidden = [100, 100]
+        n_hidden = [10, 10]
         #n_hidden = [100]  # FizzBuzz
-        n_hidden = [10]  # MNIST for beginner
+        #n_hidden = [10]  # MNIST for beginner
 
         # Set the model.
-        """
         X  = tf.placeholder(tf.float32, [None, n_X])
-        H1 = self.__make_layer(X, n_X, n_hidden[0], 'relu')
-        H2 = self.__make_layer(H1, n_hidden[0], n_hidden[1], 'relu')
-        Y  = self.__make_layer(H2, n_hidden[1], n_Y, 'softmax')
+        H1 = self.__make_layer(X, n_X, n_hidden[0], 'random_normal', 'zeros', 'relu')
+        H2 = self.__make_layer(H1, n_hidden[0], n_hidden[1], 'random_normal', 'zeros', 'relu')
+        Y  = self.__make_layer(H2, n_hidden[1], n_Y, 'random_normal', 'zeros', '')
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
-        """
-
+        
         """
         # FizzBuzz
         X  = tf.placeholder(tf.float32, [None, n_X])
@@ -76,15 +74,16 @@ class DeepLearning:
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
         """
 
+        """
         # MNIST for beginner
         X  = tf.placeholder(tf.float32, [None, n_X])
-        Y = self.__make_layer(X, n_X, n_Y, 'zeros', 'zeros', 'softmax')
+        Y = self.__make_layer(X, n_X, n_Y, 'zeros', 'zeros', '')
         Y_ = tf.placeholder(tf.float32, [None, n_Y])
-        
-        #loss, train_step = self.select_functions(Y, Y_, 0, 0)  # FizzBuzz
-        cost, train_step = self.select_functions(Y, Y_, 1, 0)  # MNIST for beginner
+        """
 
-        model = {'X': X, 'Y': Y, 'Y_': Y_, 'cost': cost, 'train_step': train_step}
+        loss, train_step = self.__select_trainer(Y, Y_, 0)  # FizzBuzz, MNIST for beginner
+
+        model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'train_step': train_step}
 
         return model
 
@@ -119,20 +118,15 @@ class DeepLearning:
         return O
 
 
-    def select_functions(self, Y, Y_, cost_type, train_type):
-        # Loss
-        if cost_type == 0:
-            cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))  # FizzBuzz
-        elif cost_type == 1:
-            cost = -tf.reduce_sum(Y_*tf.log(Y))  # MNIST for beginner
-
-        # Train step
+    def __select_trainer(self, Y, Y_, train_type):
         if train_type == 0:
-            train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(cost)  # FizzBuzz, MNIST for beginner
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
+            train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(loss)
         elif train_type == 1:
-            train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(cost)
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
+            train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(loss)
 
-        return cost, train_step
+        return loss, train_step
 
 
     def train_model(self, data, model):
@@ -146,7 +140,7 @@ class DeepLearning:
         X = model['X']
         Y = model['Y']
         Y_ = model['Y_']
-        cost = model['cost']
+        loss = model['loss']
         train_step = model['train_step']
         
         # initailize.
@@ -163,19 +157,19 @@ class DeepLearning:
                 end = start + BATCH_SIZE
                 sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
 
-                if start % 100 == 0:
-                    kost = sess.run(cost, feed_dict={X: train_X, Y_: train_Y})
+                if start % 1000 == 0:
+                    lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
                     accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
                     accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                    print start, kost, accu_train, accu_test
+                    print start, lo55, accu_train, accu_test
 
-            # Test
             """
+            # Test
             if epoch % 100 == 0:
-                kost = sess.run(cost, feed_dict={X: train_X, Y_: train_Y})
+                lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
                 accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
                 accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                print epoch, kost, accu_train, accu_test
+                print epoch, lo55, accu_train, accu_test
             """
 
 
