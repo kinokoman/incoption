@@ -18,7 +18,7 @@ class DataMnist:
 
     def main(self):
         # Download
-        mnist = input_data.read_data_sets("./data/mnist/", one_hot=True)
+        mnist = input_data.read_data_sets("../data/mnist/", one_hot=True)
 
         # Train
         train_data = mnist.train.images

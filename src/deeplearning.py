@@ -13,10 +13,11 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 BATCH_SIZE = 10 # 
-#OPT_RATE = 0.05 # FizzBuzz
-OPT_RATE = 0.01 # MNIST for beginner
+#LEARNING_RATE = 0.05 # FizzBuzz
+LEARNING_RATE = 0.01 # MNIST for beginner
+STDDEV = 0.01
 #N_ITER = 10000 # FizzBuzz
-N_ITER = 1 # MNIST for beginner
+N_ITER = 10 # MNIST for beginner
 LOG_PATH = './log/'
 
 
@@ -37,6 +38,36 @@ class DeepLearning:
 
         - batch size
         - num iter
+
+        model_params = [
+            {
+                'n_node' = 50
+                'weight' = 'random_normal'
+                'stddev' = 0.01
+                'bias' = 'zeros'
+                'activ' = 'relu'
+            },
+            {
+                'n_node' = 50
+                'weight' = 'random_normal'
+                'stddev' = 0.01
+                'bias' = 'zeros'
+                'activ' = 'relu'
+            },
+           {
+                'n_node' = 50
+                'weight' = 'random_normal'
+                'stddev' = 0.01
+                'bias' = 'zeros'
+                'activ' = ''
+            }
+
+        other_params = {
+            'trainer': 0
+            'learnig_rate': 0.01
+            'batch_size': 10
+            'n_iter': 10
+        }
         """
         pass
 
@@ -55,7 +86,7 @@ class DeepLearning:
         # Set parameters.
         n_X = data[0].shape[1]
         n_Y = data[1].shape[1]
-        n_hidden = [10, 10]
+        n_hidden = [50, 50]
         #n_hidden = [100]  # FizzBuzz
         #n_hidden = [10]  # MNIST for beginner
 
@@ -121,10 +152,10 @@ class DeepLearning:
     def __select_trainer(self, Y, Y_, train_type):
         if train_type == 0:
             loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
-            train_step = tf.train.GradientDescentOptimizer(OPT_RATE).minimize(loss)
+            train_step = tf.train.GradientDescentOptimizer(LEARNING_RATE).minimize(loss)
         elif train_type == 1:
             loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
-            train_step = tf.train.AdamOptimizer(OPT_RATE).minimize(loss)
+            train_step = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss)
 
         return loss, train_step
 

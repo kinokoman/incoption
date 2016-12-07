@@ -90,4 +90,4 @@ ENV/
 
 # etc
 src/log/
-src/data/
+data/
