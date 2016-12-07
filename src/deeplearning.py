@@ -26,36 +26,36 @@ class DeepLearning:
     def __init__(self):
         """
         - layer
-            - num node
-            - weight
-            - bias
-            - activatoin function
+            - n_node: 5 ~ 100
+            - weight: 'zeros', 'ones', 'random_normal', 'truncated_normal'
+            - stddev: 0.0001 ~ 0.1
+            - bias: 'zeros', 'ones'
+            - activ_func: '', 'relu', 'tanh', 'softmax'
 
-        - cost
-            - stddev
-        - train step
-            - opt rate
+        - trainer
+            - optimizer: GradientDescentOptimizer, AdamOptimizer
+            - learning rate: 0.0001 ~ 0.1
 
-        - batch size
-        - num iter
+        - batch size: 10 ~ 100
+        - num iter: 1 ~ 10000
+        
+
+        node_params = [50, 50]
 
         model_params = [
             {
-                'n_node' = 50
                 'weight' = 'random_normal'
                 'stddev' = 0.01
                 'bias' = 'zeros'
                 'activ' = 'relu'
             },
             {
-                'n_node' = 50
                 'weight' = 'random_normal'
                 'stddev' = 0.01
                 'bias' = 'zeros'
                 'activ' = 'relu'
             },
            {
-                'n_node' = 50
                 'weight' = 'random_normal'
                 'stddev' = 0.01
                 'bias' = 'zeros'
@@ -126,9 +126,9 @@ class DeepLearning:
         elif weight == 'ones':
             W = tf.Variable(tf.ones([n_input, n_output]))
         elif weight == 'random_normal':
-            W = tf.Variable(tf.random_normal([n_input, n_output], stddev=0.01))  # FizzBuzz
+            W = tf.Variable(tf.random_normal([n_input, n_output], stddev=STDDEV))  # FizzBuzz
         elif weight == 'truncated_normal':
-            W = tf.Variable(tf.truncated_normal([n_input, n_output], stddev=0.01))
+            W = tf.Variable(tf.truncated_normal([n_input, n_output], stddev=STDDEV))
         
         # Bias
         if bias == 'zeros':
