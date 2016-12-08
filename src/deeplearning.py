@@ -12,13 +12,13 @@ from data_mnist import DataMnist
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-BATCH_SIZE = 10 # 
+STDDEV = 0.01
 #LEARNING_RATE = 0.05 # FizzBuzz
 LEARNING_RATE = 0.01 # MNIST for beginner
-STDDEV = 0.01
+BATCH_SIZE = 10 # 
 #N_ITER = 10000 # FizzBuzz
 N_ITER = 10 # MNIST for beginner
-LOG_PATH = './log/'
+LOG_PATH = '../log/'
 
 
 
@@ -38,37 +38,135 @@ class DeepLearning:
 
         - batch size: 10 ~ 100
         - num iter: 1 ~ 10000
+
+
+        param = [1, ]
+
+         0: output weight: 0, 1, 2, 3
+         1: output stddev: 0.0001, 0.001, 0.01, 0.1
+         2: output bias: 0, 1
+         3: output activatin function: 0, 1, 2, 3
+         4: train optimizer: 0, 1
+         5: learning rate: 0.0001, 0.001, 0.01, 0.1
+         6: batch size: 10, 50, 100
+         7: num iter: 1, 10, 100, 1000, 100000
+         8: num hidden layer: 0, 1, 2, 3
+        ---------------------------------------------
+         9: num node: 50
+        10: hidden weight: 0, 1, 2, 3
+        11: hidden stddev: 0.0001, 0.001, 0.01, 0.1
+        12: hidden bias: 0, 1
+        13: hidden activatin function: 0, 1, 2, 3
         
+        dic['o_weight'] = param[0]
+        dic['o_stddev'] = param[1]
+        dic['o_bias']   = param[2]
+        dic['o_activ']  = param[3]
 
-        node_params = [50, 50]
+        dic['tr_opt']     = param[4]
+        dic['tr_rate']    = param[5]
+        dic['batch_size'] = param[6]
+        dic['n_iter']     = param[7]
+        dic['n_h_layer']  = param[8]
 
-        model_params = [
-            {
-                'weight' = 'random_normal'
-                'stddev' = 0.01
-                'bias' = 'zeros'
-                'activ' = 'relu'
-            },
-            {
-                'weight' = 'random_normal'
-                'stddev' = 0.01
-                'bias' = 'zeros'
-                'activ' = 'relu'
-            },
-           {
-                'weight' = 'random_normal'
-                'stddev' = 0.01
-                'bias' = 'zeros'
-                'activ' = ''
-            }
-
-        other_params = {
-            'trainer': 0
-            'learnig_rate': 0.01
-            'batch_size': 10
-            'n_iter': 10
-        }
+        idx = 8
+        for i in range(param[idx]):
+            dic['h%s_n_node'%(i+1)] = param[idx+1+5*i]
+            dic['h%s_weight'%(i+1)] = param[idx+2+5*i]
+            dic['h%s_stddev'%(i+1)] = param[idx+3+5*i]
+            dic['h%s_bias'%(i+1)]   = param[idx+4+5*i]
+            dic['h%s_activ'%(i+1)]  = param[idx+5+5*i]
+                
+        # FizzBuzz
+        X  = tf.placeholder(tf.float32, [None, n_X])
+        H1 = self.__make_layer(X, n_X, n_hidden[0], 'random_normal', 'zeros', 'relu')
+        Y  = self.__make_layer(H1, n_hidden[0], n_Y, 'random_normal', 'zeros', '')
+        Y_ = tf.placeholder(tf.float32, [None, n_Y])
         """
+
+        # Output Weight
+        if param[0] == 0:
+            dic['o_weight'] = 'zeros'
+        elif param[0] == 1:
+            dic['o_weight'] = 'ones'
+        elif param[0] == 2:
+            dic['o_weight'] = 'random_normal'
+        elif param[0] == 3:
+            dic['o_weight'] = 'truncated_normal'
+
+        # Output Standard deviation!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        dic['o_stddev'] = param[1]
+        
+        # Output Bias
+        if param[2] == 0:
+            dic['o_bias'] = 'zeros'
+        elif param[2] == 1:
+            dic['o_bias'] = 'ones'
+        
+        # Output Activation Function
+        if param[3] == 0:
+            dic['o_activ'] = ''
+        elif param[3] == 1:
+            dic['o_activ'] = 'relu'
+        elif param[3] == 2:
+            dic['o_activ'] = 'tanh'
+        elif param[3] == 3:
+            dic['o_activ'] = 'softmax'
+
+        # Train Optimaize
+        GradientDescentOptimizer, AdamOptimizer
+        if param[4] == 0:
+            dic['tr_opt'] = 'GradientDescentOptimizer'
+        elif param[4] == 1:
+            dic['tr_opt'] = 'AdamOptimizer'
+        
+        # Learning Rate!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        dic['tr_rate']    = param[5]
+        
+        # Batch Size!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        dic['batch_size'] = param[6]
+        
+        # The Number of Iteration!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        dic['n_iter']     = param[7]
+
+        # The Number of hidden layer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        dic['n_h_layer']  = param[8]
+
+        # Hidden Layer Design
+        idx = 8
+        for i in range(param[idx]):
+            # The Number of Node!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            dic['h%s_n_node'%(i+1)] = param[idx+1+5*i]
+
+            # Output Weight
+            if param[idx+2+5*i] == 0:
+                dic['h%s_n_node'%(i+1)] = 'zeros'
+            elif param[idx+2+5*i] == 1:
+                dic['h%s_n_node'%(i+1)] = 'ones'
+            elif param[idx+2+5*i] == 2:
+                dic['h%s_n_node'%(i+1)] = 'random_normal'
+            elif param[idx+2+5*i] == 3:
+                dic['h%s_n_node'%(i+1)] = 'truncated_normal'
+
+            # Output Standard deviation
+            dic['h%s_stddev'%(i+1)] = param[idx+3+5*i]
+            
+            # Output Bias
+            if param[idx+4+5*i] == 0:
+                dic['h%s_bias'%(i+1)] = 'zeros'
+            elif param[idx+4+5*i] == 1:
+                dic['h%s_bias'%(i+1)] = 'ones'
+            
+            # Output Activation Function
+            if param[idx+5+5*i] == 0:
+                dic['h%s_activ'%(i+1)] = ''
+            elif param[idx+5+5*i] == 1:
+                dic['h%s_activ'%(i+1)] = 'relu'
+            elif param[idx+5+5*i] == 2:
+                dic['h%s_activ'%(i+1)] = 'tanh'
+            elif param[idx+5+5*i] == 3:
+                dic['h%s_activ'%(i+1)] = 'softmax'
+
         pass
 
 
