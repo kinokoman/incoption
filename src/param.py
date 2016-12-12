@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from collections import Counter
+import random
 
 from data_fizzbuzz import DataFizzBuzz
 
@@ -23,7 +24,7 @@ class Param:
         param.append(random.randint(0, 3))  # 0: Output Weight
         param.append(random.randint(0, 3))  # 1: Output Standard deviation
         param.append(random.randint(0, 1))  # 2: Output Bias
-        param.append(random.randint(0, 3))  # 3: Output Activation Function
+        param.append(random.randint(0, 0))  # 3: Output Activation Function
         param.append(random.randint(0, 1))  # 4: Train Optimaize
         param.append(random.randint(0, 3))  # 5: Learning Rate
         param.append(random.randint(0, 2))  # 6: Batch Size
@@ -38,18 +39,12 @@ class Param:
             param.append(random.randint(0, 3))  # Output Standard deviation
             param.append(random.randint(0, 1))  # Output Bias
             param.append(random.randint(0, 3))  # Output Activation Function
-        
+
+        self.convert_param(param)        
 
 
     def convert_param(self, param):
-        """
-        # FizzBuzz
-        X  = tf.placeholder(tf.float32, [None, n_X])
-        H1 = self.__make_layer(X, n_X, n_hidden[0], 'random_normal', 'zeros', 'relu')
-        Y  = self.__make_layer(H1, n_hidden[0], n_Y, 'random_normal', 'zeros', '')
-        Y_ = tf.placeholder(tf.float32, [None, n_Y])
-        """
-        param = [2, 1, 0, 0, 0, 1, 2, 4, 1, 2, 2, 1, 0, 1]
+        #param = [2, 1, 0, 0, 0, 1, 2, 4, 1, 2, 2, 1, 0, 1]
         dic = {}
 
         # 0: Output Weight
@@ -70,9 +65,6 @@ class Param:
         
         # 3: Output Activation Function
         if   param[3] == 0: dic['o_activ'] = ''
-        elif param[3] == 1: dic['o_activ'] = 'relu'
-        elif param[3] == 2: dic['o_activ'] = 'tanh'
-        elif param[3] == 3: dic['o_activ'] = 'softmax'
 
         # 4: Train Optimaize
         if   param[4] == 0: dic['tr_opt'] = 'GradientDescentOptimizer'
