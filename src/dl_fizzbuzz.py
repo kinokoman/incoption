@@ -26,9 +26,14 @@ class DeepLearning:
 
 
     def main(self):
+        start = time.time()
+
         data = DataFizzBuzz().main()
         model = self.design_model(data)
         self.train_model(data, model)
+
+        end = time.time()
+        print (end-start)/60, 'minutes trained model.'
 
 
     def design_model(self, data):        
@@ -86,7 +91,7 @@ class DeepLearning:
                 lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
                 accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
                 accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                print 'Epoch: %s, \t Loss: %s, \t Train Accracy: %s, \t Test Accracy: %s' % (epoch, lo55, accu_train, accu_test)
+                print 'Epoch: %s, \t Loss: %-8s, \t Train Accracy: %-8s, \t Test Accracy: %-8s' % (epoch, lo55, accu_train, accu_test)
 
 
 if __name__ == "__main__":
