@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from collections import Counter
 import tensorflow as tf
+import time
 
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
@@ -90,6 +91,8 @@ class DeepLearning:
 
 
     def main(self):
+        start = time.time()
+
         print 'Setting data...'
         #data = DataFizzBuzz().main()
         data = DataMnist().main()
@@ -97,6 +100,9 @@ class DeepLearning:
         print 'Training...'
         model = self.design_model(data)
         self.train_model(data, model)
+
+        end = time.time()
+        print (end-start)/60, 'minutes trained model.'
 
 
     def design_model(self, data):
