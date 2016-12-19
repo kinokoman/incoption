@@ -82,26 +82,39 @@ class DLFizzBuzz:
         sess = tf.InteractiveSession()
         tf.initialize_all_variables().run()
 
-        for epoch in range(10000):
+        # Logging data for TensorBoard
+        _ = tf.scalar_summary('loss', loss)
+        _ = tf.scalar_summary('accuracy', accuracy)
+        writer = tf.train.SummaryWriter('./log/', graph_def=sess.graph_def)
+
+        for epoch in range(10000+1):
             # データのランダマイズ
             p = np.random.permutation(range(len(train_X)))
             train_X, train_Y = train_X[p], train_Y[p]
 
             # 学習
-            for start in range(0, train_X.shape[0], 10):
-                end = start + 10
+            for start in range(0, train_X.shape[0], 100):
+                end = start + 100
                 sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
             
             # テスト
             if epoch % 100 == 0:
-                # コスト関数
-                lo55 = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
+                # 教師データのコスト関数
+                loss_train = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
                 # 教師データの精度
                 accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
+                # テストデータのコスト関数
+                loss_test = sess.run(loss, feed_dict={X: test_X, Y_: test_Y})
                 # テストデータの精度
                 accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
                 # 標準出力
-                print 'Epoch: %s, \t Loss: %-8s, \t Train Accracy: %-8s, \t Test Accracy: %-8s' % (epoch, lo55, accu_train, accu_test)
+                std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accracy: %s, \t Test Loss: %s, \t Test Accracy: %s'
+                print std_output % (epoch, round(loss_train, 6), round(accu_train, 6), round(loss_test, 6), round(accu_test, 6))
+                
+            # Write log to TensorBoard
+            summary_str = sess.run(tf.merge_all_summaries(), feed_dict={X: test_X, Y_: test_Y})
+            writer.add_summary(summary_str, epoch)
+
 
 
 if __name__ == "__main__":

@@ -207,7 +207,7 @@ class DeepLearning:
             train_X, train_Y = train_X[p], train_Y[p]
 
             # Train
-            for start in range(0, train_X.shape[0], BATCH_SIZE):
+            for start in range(0, train_X.shape[0]+1, BATCH_SIZE):
                 end = start + BATCH_SIZE
                 sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
 
