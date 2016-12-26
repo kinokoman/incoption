@@ -22,21 +22,15 @@ class DLFizzBuzz:
     def main(self):
         start = time.time()
 
-        # FizzBuzzデータを生成して取得する。
         data = DataFizzBuzz().main()
-
-        # Deep Learnigモデルを設計する。
-        model_train = self.design_model(data, mode='TRAIN')
-        model_test = self.design_model(data, mode='TEST')
-        
-        # Deep Learningモデルを学習させる。
-        self.train_model(data, model_train, model_test)
+        network = self.design_network(data)
+        self.train_network(data, network)
 
         end = time.time()
-        print (end-start)/60, 'minutes trained model.'
+        print round((end-start)/60, 1), 'minutes'
 
 
-    def design_model(self, data, mode='TRAIN'):
+    def design_network(self, data):
         # 入力層
         X  = tf.placeholder(tf.float32, [None, data[0].shape[1]])
 
@@ -44,8 +38,7 @@ class DLFizzBuzz:
         W1 = tf.Variable(tf.random_normal([data[0].shape[1], 100], stddev=0.01))
         B1 = tf.Variable(tf.zeros([100]))
         H1 = tf.nn.relu(tf.matmul(X, W1) + B1)
-        if mode == 'TRAIN':
-            H1 = tf.nn.dropout(H1, 0.50)
+        #H1 = tf.nn.dropout(H1, 0.50)
         
         # 出力層
         W2 = tf.Variable(tf.random_normal([100, data[1].shape[1]], stddev=0.01))
@@ -57,133 +50,57 @@ class DLFizzBuzz:
         
         # 学習関数
         loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
-        train_step = tf.train.GradientDescentOptimizer(0.01).minimize(loss)
+        step = tf.train.GradientDescentOptimizer(0.05).minimize(loss)
+        
+        network = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'step': step}
+
+        return network
+
+
+    def train_network(self, data, network):
+        # dataのセット
+        train_data  = data[0]
+        train_label = data[1]
+        test_data  = data[2]
+        test_label = data[3]
+
+        # modelのセット
+        X  = network['X']
+        Y  = network['Y']
+        Y_ = network['Y_']
+        loss  = network['loss']
+        step  = network['step']
 
         # 精度
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
-        
-        model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'train_step': train_step, 'accuracy': accuracy}
-
-        return model
-
-
-    def train_model(self, data, model_train, model_test):
-        # dataのセット
-        train_X = data[0]
-        train_Y = data[1]
-        test_X = data[2]
-        test_Y = data[3]
-
-        # modelのセット
-        trX = model_train['X']
-        trY = model_train['Y']
-        trY_ = model_train['Y_']
-        trLoss = model_train['loss']
-        trStep = model_train['train_step']
-        trAccu = model_train['accuracy']
-        
-        teX = model_test['X']
-        teY = model_test['Y']
-        teY_ = model_test['Y_']
-        teLoss = model_test['loss']
-        teStep = model_test['train_step']
-        teAccu = model_test['accuracy']
         
         # 初期化
         sess = tf.InteractiveSession()
         tf.initialize_all_variables().run()
 
-        # Logging data for TensorBoard
-        _ = tf.scalar_summary('train loss', trLoss)
-        _ = tf.scalar_summary('train accuracy', trAccu)
-        _ = tf.scalar_summary('test loss', teLoss)
-        _ = tf.scalar_summary('test accuracy', teAccu)
-        writer = tf.train.SummaryWriter('./log/', graph_def=sess.graph)
-
+        records = []
         for epoch in range(10000+1):
             # データのランダマイズ
-            p = np.random.permutation(range(len(train_X)))
-            train_X, train_Y = train_X[p], train_Y[p]
+            p = np.random.permutation(range(len(train_data)))
+            train_data, train_label = train_data[p], train_label[p]
 
             # 学習
-            for start in range(0, train_X.shape[0], 10):
-                end = start + 10
-                sess.run(trStep, feed_dict={trX: train_X[start:end], trY_: train_Y[start:end]})
+            for start in range(0, train_label.shape[0], 100):
+                end = start + 100
+                sess.run(step, feed_dict={X: train_data[start:end], Y_: train_label[start:end]})
             
             # テスト
+            train_loss = sess.run(loss, feed_dict={X: train_data, Y_: train_label})
+            train_accuracy = sess.run(accuracy, feed_dict={X: train_data, Y_: train_label})
+            test_accuracy = sess.run(accuracy, feed_dict={X: test_data, Y_: test_label})
+
+            record = {'epoch': epoch, 'train_loss': train_loss, 'train_accuracy': train_accuracy, 'test_accuracy': test_accuracy}
+            records.append(record)
+
             if epoch % 100 == 0:
-                # 教師データのコスト関数
-                loss_train = sess.run(trLoss, feed_dict={trX: train_X, trY_: train_Y})
-                # 教師データの精度
-                accu_train = sess.run(trAccu, feed_dict={trX: train_X, trY_: train_Y})
-                # テストデータのコスト関数
-                loss_test = sess.run(teLoss, feed_dict={teX: test_X, teY_: test_Y})
-                # テストデータの精度
-                accu_test = sess.run(teAccu, feed_dict={teX: test_X, teY_: test_Y})
-                # 標準出力
-                std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accracy: %s, \t Test Loss: %s, \t Test Accracy: %s'
-                print std_output % (epoch, round(loss_train, 6), round(accu_train, 6), round(loss_test, 6), round(accu_test, 6))
+                std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accracy: %s, \t Test Accracy: %s'            
+                print std_output % (record['epoch'], record['train_loss'], record['train_accuracy'], record['test_accuracy'])
                 
-            # Write log to TensorBoard
-            summary_str = sess.run(tf.merge_all_summaries(), feed_dict={trX: train_X, trY_: train_Y, teX: test_X, teY_: test_Y})
-            writer.add_summary(summary_str, epoch)
-
-
-        def train_model_2(self, data, model):
-            # dataのセット
-            train_X = data[0]
-            train_Y = data[1]
-            test_X = data[2]
-            test_Y = data[3]
-
-            # modelのセット
-            X = model['X']
-            Y = model['Y']
-            Y_ = model['Y_']
-            loss = model['loss']
-            train_step = model['train_step']
-            
-            # 定義
-            accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
-
-            # 初期化
-            sess = tf.InteractiveSession()
-            tf.initialize_all_variables().run()
-
-            # Logging data for TensorBoard
-            _ = tf.scalar_summary('loss', loss)
-            _ = tf.scalar_summary('accuracy', accuracy)
-            writer = tf.train.SummaryWriter('./log/', graph_def=sess.graph_def)
-
-            for epoch in range(10000+1):
-                # データのランダマイズ
-                p = np.random.permutation(range(len(train_X)))
-                train_X, train_Y = train_X[p], train_Y[p]
-
-                # 学習
-                for start in range(0, train_X.shape[0], 10):
-                    end = start + 10
-                    sess.run(train_step, feed_dict={X: train_X[start:end], Y_: train_Y[start:end]})
-                
-                # テスト
-                if epoch % 100 == 0:
-                    # 教師データのコスト関数
-                    loss_train = sess.run(loss, feed_dict={X: train_X, Y_: train_Y})
-                    # 教師データの精度
-                    accu_train = sess.run(accuracy, feed_dict={X: train_X, Y_: train_Y})
-                    # テストデータのコスト関数
-                    loss_test = sess.run(loss, feed_dict={X: test_X, Y_: test_Y})
-                    # テストデータの精度
-                    accu_test = sess.run(accuracy, feed_dict={X: test_X, Y_: test_Y})
-                    # 標準出力
-                    std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accracy: %s, \t Test Loss: %s, \t Test Accracy: %s'
-                    print std_output % (epoch, round(loss_train, 6), round(accu_train, 6), round(loss_test, 6), round(accu_test, 6))
-                    
-                # Write log to TensorBoard
-                summary_str = sess.run(tf.merge_all_summaries(), feed_dict={X: test_X, Y_: test_Y})
-                writer.add_summary(summary_str, epoch)
-
-
 
 if __name__ == "__main__":
     DLFizzBuzz().main()
