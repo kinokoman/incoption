@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import sys
+import importlib
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -9,10 +10,6 @@ import time
 
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 
 class DLFizzBuzz:
     def __init__(self):
@@ -27,7 +24,8 @@ class DLFizzBuzz:
         self.train_network(data, network)
 
         end = time.time()
-        print round((end-start)/60, 1), 'minutes'
+
+        print(round((end-start)/60, 1), 'minutes')
 
 
     def design_network(self, data):
@@ -38,7 +36,7 @@ class DLFizzBuzz:
         W1 = tf.Variable(tf.random_normal([data[0].shape[1], 100], stddev=0.01))
         B1 = tf.Variable(tf.zeros([100]))
         H1 = tf.nn.relu(tf.matmul(X, W1) + B1)
-        #H1 = tf.nn.dropout(H1, 0.50)
+        H1 = tf.nn.dropout(H1, 0.50)
         
         # 出力層
         W2 = tf.Variable(tf.random_normal([100, data[1].shape[1]], stddev=0.01))
@@ -76,7 +74,7 @@ class DLFizzBuzz:
         
         # 初期化
         sess = tf.InteractiveSession()
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
 
         records = []
         for epoch in range(10000+1):
@@ -98,8 +96,8 @@ class DLFizzBuzz:
             records.append(record)
 
             if epoch % 100 == 0:
-                std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accracy: %s, \t Test Accracy: %s'            
-                print std_output % (record['epoch'], record['train_loss'], record['train_accuracy'], record['test_accuracy'])
+                std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
+                print(std_output % (record['epoch'], record['train_loss'], record['train_accuracy'], record['test_accuracy']))
                 
 
 if __name__ == "__main__":

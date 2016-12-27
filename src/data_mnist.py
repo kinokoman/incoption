@@ -7,10 +7,6 @@ from collections import Counter
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-
 class DataMnist:
     def __init__(self):
         pass

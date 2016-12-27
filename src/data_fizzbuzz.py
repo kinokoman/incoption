@@ -1,13 +1,11 @@
 # coding: utf-8
 
 import sys
+import importlib
 import pandas as pd
 import numpy as np
 from collections import Counter
 import tensorflow as tf
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 BORDER = 101
 NUM_DIGITS = 10
