@@ -12,9 +12,9 @@ from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
 
 DROPOUT_RATE = 1.0
-TRAIN_RATE = 0.01
+TRAIN_RATE = 0.05
 N_ITER = 10000
-BATCH_SIZE = 10
+BATCH_SIZE = 100
 
 
 class DLFizzBuzz:
@@ -54,7 +54,7 @@ class DLFizzBuzz:
         
         # Training function
         loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
-        step = tf.train.GradientDescentOptimizer(0.01).minimize(loss)
+        step = tf.train.GradientDescentOptimizer(TRAIN_RATE).minimize(loss)
         
         network = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'step': step}
 
@@ -77,10 +77,10 @@ class DLFizzBuzz:
 
         # Setting
         sess = tf.InteractiveSession()
-        tf.global_variables_initializer().run()
+        tf.initialize_all_variables().run()
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
         
-        records = []
+        logs = []
         for epoch in range(N_ITER+1):
             # Randamize data
             p = np.random.permutation(range(len(train_data)))
@@ -96,15 +96,17 @@ class DLFizzBuzz:
             train_accuracy = sess.run(accuracy, feed_dict={X: train_data, Y_: train_label})
             test_accuracy = sess.run(accuracy, feed_dict={X: test_data, Y_: test_label})
 
-            record = {'epoch': epoch, 'train_loss': train_loss, 'train_accuracy': train_accuracy, 'test_accuracy': test_accuracy}
-            records.append(record)
+            # Logging
+            log = {'epoch': epoch, 'train_loss': train_loss, 'train_accuracy': train_accuracy, 'test_accuracy': test_accuracy}
+            logs.append(log)
 
             if epoch % 100 == 0:
                 std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
-                print(std_output % (record['epoch'], record['train_loss'], record['train_accuracy'], record['test_accuracy']))
+                print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 
-        df = pd.DataFrame(records)
-        df.to_csv("./log/accuracy_loss_Q_dropout_E_%s_N_train_E_%s_N_batch_E_%s.csv" % (DROPOUT_RATE, TRAIN_RATE, BATCH_SIZE), index=False)
+        # Save logs
+        df = pd.DataFrame(logs)
+        df.to_csv("./log/acculoss_dropout_%s_train_%s_batch_%s_iter_%s.csv" % (DROPOUT_RATE, TRAIN_RATE, BATCH_SIZE, N_ITER), index=False)
                 
 
 if __name__ == "__main__":

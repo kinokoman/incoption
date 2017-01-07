@@ -36,7 +36,7 @@ class Param:
         for i in range(param[-1]):
             param.append(random.randint(0, 2))  # The Number of Node
             param.append(random.randint(0, 3))  # Output Weight
-            param.append(random.randint(0, 3))  # Output Standard deviation
+            param.append(random.randint(0, 3))  # Output Standard Deviation
             param.append(random.randint(0, 1))  # Output Bias
             param.append(random.randint(0, 3))  # Output Activation Function
 
