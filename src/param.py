@@ -36,7 +36,6 @@ class Param:
         seq_nums.append(random.randint(1, 1))  # 8: The Number of hidden layer
         
         # 9~: Hidden Layer Design
-        idx = 8
         for i in range(seq_nums[-1]):
             seq_nums.append(random.randint(0, 2))  # The Number of Node
             seq_nums.append(random.randint(0, 3))  # Output Weight
