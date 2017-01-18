@@ -15,13 +15,14 @@ ELITE_RATE = 0.5
 class GA:
     def __init__(self):
         self.items = {}
+        self.fitness_master = {}
 
 
     def main(self): 
         pop = [{'param': p} for p in self.get_population()]
         
         for g in range(N_GEN):
-            print 'Generation%3s:' % str(g), 
+            print 'Generation%3s:' % str(g)#, 
 
             # Get elites
             fitness = self.evaluate(pop)
@@ -43,19 +44,19 @@ class GA:
             fitness = self.evaluate(pop)
             pop = fitness[:]
 
+            """
             print
             for fit in fitness:
                 print fit
-        
-            print pop[0]['score0'], pop[0]['score1']
+            """
+            print pop[0]['score0'], pop[0]['score1'], pop[0]['param']
+            print
+
             
-
-
     def get_population(self):
         # Make items
         for i in xrange(N_ITEMS):
-            #self.items[i] = (random.uniform(0, 100), random.randint(1, 10))  # value, weight
-            self.items[i] = [random.randint(0, 100), random.randint(1, 10)]  # value, weight
+            self.items[i] = (random.randint(0, 100), random.randint(1, 10))  # value, weight
         
         # Make population
         pop = []
@@ -81,11 +82,21 @@ class GA:
         fitness = []
         for p in pop:
             if not p.has_key('score0'):
-                p.update(self.clac_score(p['param']))
+                if self.fitness_master.has_key(str(p['param'])):
+                    p.update(self.fitness_master[str(p['param'])])
+                else:
+                    print 'clac_score!'
+                    p.update(self.clac_score(p['param']))
                 fitness.append(p)
             else:
                 fitness.append(p)
 
+        # All Generation fitness
+        for fit in fitness:
+            param = fit['param']
+            self.fitness_master[str(param)] = {k:v for k,v in fit.items() if k!='param'}
+
+        # This generation fitness
         df = pd.DataFrame(fitness)
         df = df.sort(['score0', 'score1'], ascending=[False, True])
         fitness = df.to_dict('records')
