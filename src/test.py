@@ -20,6 +20,18 @@ class Test:
 
 
     def main(self):
+        
+        
+
+    def multisort(self):
+        data = [{'x': random.randint(0, 10), 'y': random.randint(1, 5)} for i in range(10)]
+        df = pd.DataFrame(data)
+        df = df.sort(['x', 'y'], ascending=[False, True])
+        df.reset_index(drop=True, inplace=True)
+
+        print df
+
+    def onehotencoder(self):
         """
         onehotencoder
         """
