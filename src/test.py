@@ -20,8 +20,18 @@ class Test:
 
 
     def main(self):
+        dict_in_list = [{'x': random.randint(0, 10), 'y': random.randint(1, 5)} for i in range(10)]
+        for dil in dict_in_list:
+            print dil
+
+        df = pd.DataFrame(dict_in_list)
+        print df
+
+        dict_in_list = df.to_dict('records')
+        for dil in dict_in_list:
+            print dil
         
-        
+
 
     def multisort(self):
         data = [{'x': random.randint(0, 10), 'y': random.randint(1, 5)} for i in range(10)]
