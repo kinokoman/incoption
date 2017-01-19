@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from collections import Counter
+import random
+from sklearn.preprocessing import OneHotEncoder
 
 from data_fizzbuzz import DataFizzBuzz
 
@@ -18,6 +20,25 @@ class Test:
 
 
     def main(self):
+        """
+        onehotencoder
+        """
+        X = np.array([random.choice(range(5)) for i in range(10)])
+        print(X)
+
+        X = np.array(X).reshape(1, -1)
+        print(X)
+        
+        X = X.transpose()
+        print(X)
+        
+        encoder = OneHotEncoder(n_values=max(X)+1)
+        X = encoder.fit_transform(X).toarray()
+        print(X)
+
+
+
+    def param(self):
         """
         # FizzBuzz
         X  = tf.placeholder(tf.float32, [None, n_X])
