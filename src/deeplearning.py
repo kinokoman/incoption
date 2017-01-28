@@ -12,8 +12,6 @@ from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
 from param import Param
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 LOG_PATH = '../log/'
 
@@ -26,11 +24,11 @@ class DeepLearning:
     def main(self):
         start = time.time()
 
-        print 'Setting data...'
+        print('Setting data...')
         data = DataFizzBuzz().main()
         #data = DataMnist().main()
         
-        print 'Training...'
+        print('Training...')
         seq_nums = Param().generate_seq_nums()
         params = Param().convert_param(seq_nums)
 
@@ -38,18 +36,18 @@ class DeepLearning:
         self.train_network(data, model, params)
 
         end = time.time()
-        print (end-start)/60, 'minutes trained model.'
+        print((end-start)/60, 'minutes trained model.')
 
 
     def main2(self, numbers):
         """
         For Genetic Algorithm
         """
-        print 'Setting data...'
+        print('Setting data...')
         data = DataFizzBuzz().main()
         #data = DataMnist().main()
         
-        print 'Training...'
+        print('Training...')
         start = time.time()
         
         params = Param().convert_param(numbers)
@@ -58,7 +56,7 @@ class DeepLearning:
 
         end = time.time()
         time_cost = (end-start)/60
-        print time_cost, 'minutes trained model.'
+        print(time_cost, 'minutes trained model.')
 
         return log['test_accuracy'], time_cost
 
@@ -69,17 +67,19 @@ class DeepLearning:
         n_Y = data[1].shape[1]
 
         # Make network from params
-        if params.has_key('h3_n_node'):
+        if 'h3_n_node' in params:
             pass
-        elif params.has_key('h2_n_node'):
+        elif 'h2_n_node' in params:
             pass
-        elif params.has_key('h1_n_node'):
+        elif 'h1_n_node' in params:
             X  = tf.placeholder(tf.float32, [None, n_X])
             H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'])
             Y  = self.__make_layer(H1, params['h1_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'])
             Y_ = tf.placeholder(tf.float32, [None, n_Y])
         else:
-            pass        
+            X  = tf.placeholder(tf.float32, [None, n_X])
+            Y  = self.__make_layer(X, n_X, n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'])
+            Y_ = tf.placeholder(tf.float32, [None, n_Y])
 
         # Select trainer
         loss, train_step = self.__select_trainer(Y, Y_, params)
@@ -146,7 +146,8 @@ class DeepLearning:
 
         # Setting
         sess = tf.InteractiveSession()
-        tf.initialize_all_variables().run()
+        #tf.initialize_all_variables().run()
+        tf.global_variables_initializer.run()
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
         
         logs = []

@@ -10,12 +10,12 @@ from param import Param
 from deeplearning import DeepLearning
 
 N_ITEMS = 20
-N_POP = 3 #20
-N_GEN = 2 #25
+N_POP = 30 #20
+N_GEN = 25 #25
 MUTATE_PROB = 0.1
 ELITE_RATE = 0.5
 
-N_HIDDEN_LAYER = 1
+N_HIDDEN_LAYER = 0
 
 
 class GA:
@@ -26,13 +26,13 @@ class GA:
 
     def main(self): 
         pop = [{'param': p} for p in self.get_population()]
-        print 'population'
+        print('population')
         for p in pop:
-            print p
+            print(p)
         print
         
         for g in range(N_GEN):
-            print 'Generation%3s:' % str(g)#, 
+            print('Generation%3s:' % str(g))#, 
 
             # Get elites
             fitness = self.evaluate(pop)
@@ -57,9 +57,9 @@ class GA:
             """
             print
             for fit in fitness:
-                print fit
+                print(fit)
             """
-            print pop[0]['score0'], pop[0]['score1'], pop[0]['param']
+            print(pop[0]['score0'], pop[0]['score1'], pop[0]['param'])
             print
 
             
@@ -80,7 +80,7 @@ class GA:
         dic['score0'] = test_accuracy
         dic['score1'] = time_cost
 
-        print dic
+        print(dic)
         
         return dic
 
@@ -88,17 +88,17 @@ class GA:
     def evaluate(self, pop):
         fitness = []
         for p in pop:
-            if not p.has_key('score0'):
-                if self.fitness_master.has_key(str(p['param'])):
-                    print 'Yes, No'
+            if not 'score0' in p:
+                if str(p['param']) in self.fitness_master:
+                    print('Yes, No')
                     p.update(self.fitness_master[str(p['param'])])
                 else:
-                    #print 'clac_score!'
-                    print 'No, No'
+                    #print('clac_score!')
+                    print('No, No')
                     p.update(self.clac_score(p['param']))
                 fitness.append(p)
             else:
-                print 'Yes, Yes'
+                print('Yes, Yes')
                 fitness.append(p)
 
         # All Generation fitness

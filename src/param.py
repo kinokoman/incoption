@@ -6,9 +6,6 @@ import random
 
 from data_fizzbuzz import DataFizzBuzz
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
-
 
 class Param:
     def __init__(self):
@@ -17,14 +14,11 @@ class Param:
 
     def main(self):
         """
-        numbersのrangeを返すメソッドと各rangeからrandom choiceするメソッドを書く
-        """
-        """
         ranges = self.get_param_ranges(1)
         for i in range(len(ranges)):
             print '%2s %-15s %2s'% (i, ranges[i], random.choice(ranges[i]))
         """
-        print self.make_param(1)
+        print(self.make_param(1))
 
 
     def make_param(self, n_hidden_layer):
@@ -44,7 +38,7 @@ class Param:
         ranges.append(range(0, 1+1))  # 4: Train Optimaize
         ranges.append(range(0, 3+1))  # 5: Learning Rate
         ranges.append(range(0, 2+1))  # 6: Batch Size
-        ranges.append(range(0, 3+1))  # 7: The Number of Iteration, (0, 4+1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ranges.append(range(0, 4+1))  # 7: The Number of Iteration, (0, 4+1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ranges.append(range(L, L+1))  # 8: The Number of hidden layer
         
         # 9~: Hidden Layer Design
@@ -56,33 +50,6 @@ class Param:
             ranges.append(range(0, 3+1))  # Output Activation Function
 
         return ranges
-
-
-    """
-    def generate_numbers(self, n_hidden_layer):
-        numbers = []
-        
-        numbers.append(random.randint(0, 3))  # 0: Output Weight
-        numbers.append(random.randint(0, 3))  # 1: Output Standard deviation
-        numbers.append(random.randint(0, 1))  # 2: Output Bias
-        numbers.append(random.randint(0, 0))  # 3: Output Activation Function
-        numbers.append(random.randint(0, 1))  # 4: Train Optimaize
-        numbers.append(random.randint(0, 3))  # 5: Learning Rate
-        numbers.append(random.randint(0, 2))  # 6: Batch Size
-        #numbers.append(random.randint(0, 4))  # 7: The Number of Iteration
-        numbers.append(random.randint(0, 3))  # 7: The Number of Iteration
-        numbers.append(random.randint(n_hidden_layer, n_hidden_layer))  # 8: The Number of hidden layer
-        
-        # 9~: Hidden Layer Design
-        for i in range(numbers[-1]):
-            numbers.append(random.randint(0, 2))  # The Number of Node
-            numbers.append(random.randint(0, 3))  # Output Weight
-            numbers.append(random.randint(0, 3))  # Output Standard Deviation
-            numbers.append(random.randint(0, 1))  # Output Bias
-            numbers.append(random.randint(0, 3))  # Output Activation Function
-
-        return numbers
-    """
 
 
     def convert_param(self, param):
@@ -167,7 +134,7 @@ class Param:
 
         # Dudeg
         for k in sorted(params):
-            print '%-12s'%k, params[k]
+            print('%-12s'%k, params[k])
         print
 
         return params
