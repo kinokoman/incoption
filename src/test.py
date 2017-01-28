@@ -20,6 +20,10 @@ class Test:
 
 
     def main(self):
+        pass
+        
+
+    def get_dicts_in_list_from_dataframe(self):
         dict_in_list = [{'x': random.randint(0, 10), 'y': random.randint(1, 5)} for i in range(10)]
         for dil in dict_in_list:
             print dil
@@ -30,7 +34,6 @@ class Test:
         dict_in_list = df.to_dict('records')
         for dil in dict_in_list:
             print dil
-        
 
 
     def multisort(self):
@@ -40,6 +43,7 @@ class Test:
         df.reset_index(drop=True, inplace=True)
 
         print df
+
 
     def onehotencoder(self):
         """
@@ -57,7 +61,6 @@ class Test:
         encoder = OneHotEncoder(n_values=max(X)+1)
         X = encoder.fit_transform(X).toarray()
         print(X)
-
 
 
     def param(self):

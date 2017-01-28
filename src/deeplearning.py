@@ -31,7 +31,7 @@ class DeepLearning:
         #data = DataMnist().main()
         
         print 'Training...'
-        seq_nums = Param().generate_random_seq_nums()
+        seq_nums = Param().generate_seq_nums()
         params = Param().convert_param(seq_nums)
 
         model = self.design_network(data, params)
@@ -39,6 +39,28 @@ class DeepLearning:
 
         end = time.time()
         print (end-start)/60, 'minutes trained model.'
+
+
+    def main2(self, numbers):
+        """
+        For Genetic Algorithm
+        """
+        print 'Setting data...'
+        data = DataFizzBuzz().main()
+        #data = DataMnist().main()
+        
+        print 'Training...'
+        start = time.time()
+        
+        params = Param().convert_param(numbers)
+        model = self.design_network(data, params)
+        log = self.train_network(data, model, params)
+
+        end = time.time()
+        time_cost = (end-start)/60
+        print time_cost, 'minutes trained model.'
+
+        return log['test_accuracy'], time_cost
 
 
     def design_network(self, data, params):
@@ -155,6 +177,8 @@ class DeepLearning:
         dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
         df = pd.DataFrame(logs)
         df.to_csv("./log/accuracy_and_error_%s.csv"%dt, index=False)
+
+        return logs[-1]
 
 
 if __name__ == "__main__":

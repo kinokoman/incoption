@@ -6,30 +6,20 @@ import copy
 import operator
 import pandas as pd
 
-from param import Param
-from deeplearning import DeepLearning
-
 N_ITEMS = 20
-N_POP = 3 #20
-N_GEN = 2 #25
+N_POP = 20
+N_GEN = 25
 MUTATE_PROB = 0.1
 ELITE_RATE = 0.5
 
-N_HIDDEN_LAYER = 1
-
-
 class GA:
     def __init__(self):
-        self.param_ranges = Param().get_param_ranges(N_HIDDEN_LAYER)
+        self.items = {}
         self.fitness_master = {}
 
 
     def main(self): 
         pop = [{'param': p} for p in self.get_population()]
-        print 'population'
-        for p in pop:
-            print p
-        print
         
         for g in range(N_GEN):
             print 'Generation%3s:' % str(g)#, 
@@ -64,24 +54,27 @@ class GA:
 
             
     def get_population(self):
+        # Make items
+        for i in xrange(N_ITEMS):
+            self.items[i] = (random.randint(0, 100), random.randint(1, 10))  # value, weight
+        
         # Make population
         pop = []
         for i in range(N_POP):
-            ind = Param().make_param(N_HIDDEN_LAYER)
+            ind = [self.items[k] for k in random.sample(range(N_ITEMS), 5)]
             pop.append(ind)
 
         return pop
 
 
     def clac_score(self, indivisual):
-        test_accuracy, time_cost = DeepLearning().main2(indivisual)
-            
         dic = {}
-        dic['score0'] = test_accuracy
-        dic['score1'] = time_cost
-
-        print dic
-        
+        dic['score0'] = 0  # value
+        dic['score1'] = 0  # weight
+        for ind in indivisual:
+            dic['score0'] += ind[0]
+            dic['score1'] += ind[1]
+            
         return dic
 
 
@@ -90,15 +83,12 @@ class GA:
         for p in pop:
             if not p.has_key('score0'):
                 if self.fitness_master.has_key(str(p['param'])):
-                    print 'Yes, No'
                     p.update(self.fitness_master[str(p['param'])])
                 else:
-                    #print 'clac_score!'
-                    print 'No, No'
+                    print 'clac_score!'
                     p.update(self.clac_score(p['param']))
                 fitness.append(p)
             else:
-                print 'Yes, Yes'
                 fitness.append(p)
 
         # All Generation fitness
@@ -115,9 +105,10 @@ class GA:
 
 
     def mutate(self, parent):
-        idx = int(math.floor(random.random()*len(parent)))
+        ind_idx = int(math.floor(random.random()*len(parent)))
+        item_idx = random.choice(range(N_ITEMS))
         child = copy.deepcopy(parent)
-        child[idx] = random.choice(self.param_ranges[idx])
+        child[ind_idx] = self.items[item_idx]
 
         return child
 
