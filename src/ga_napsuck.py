@@ -22,7 +22,7 @@ class GA:
         pop = [{'param': p} for p in self.get_population()]
         
         for g in range(N_GEN):
-            print 'Generation%3s:' % str(g)#, 
+            print('Generation%3s:' % str(g)), 
 
             # Get elites
             fitness = self.evaluate(pop)
@@ -44,20 +44,14 @@ class GA:
             fitness = self.evaluate(pop)
             pop = fitness[:]
 
-            """
-            print
-            for fit in fitness:
-                print fit
-            """
-            print pop[0]['score0'], pop[0]['score1'], pop[0]['param']
-            print
+            print(pop[0]['score0'], pop[0]['score1'], pop[0]['param'])
 
             
     def get_population(self):
         # Make items
         for i in xrange(N_ITEMS):
             self.items[i] = (random.randint(0, 100), random.randint(1, 10))  # value, weight
-        
+
         # Make population
         pop = []
         for i in range(N_POP):
@@ -82,16 +76,17 @@ class GA:
         fitness = []
         for p in pop:
             if not p.has_key('score0'):
+                # The indivisual made by crossover or mutation existed before
                 if self.fitness_master.has_key(str(p['param'])):
                     p.update(self.fitness_master[str(p['param'])])
+                # The indivisual is the first
                 else:
-                    print 'clac_score!'
                     p.update(self.clac_score(p['param']))
                 fitness.append(p)
             else:
                 fitness.append(p)
 
-        # All Generation fitness
+        # Save fitness to all genaration dictinary
         for fit in fitness:
             param = fit['param']
             self.fitness_master[str(param)] = {k:v for k,v in fit.items() if k!='param'}
@@ -99,6 +94,7 @@ class GA:
         # This generation fitness
         df = pd.DataFrame(fitness)
         df = df.sort(['score0', 'score1'], ascending=[False, True])
+
         fitness = df.to_dict('records')
         
         return fitness

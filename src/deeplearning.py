@@ -14,6 +14,8 @@ from param import Param
 
 
 LOG_PATH = '../log/'
+DEBUG = False
+TRAIN_LOG = False
 
 
 class DeepLearning:
@@ -21,33 +23,9 @@ class DeepLearning:
         pass
 
 
-    def main(self):
-        start = time.time()
-
-        print('Setting data...')
-        data = DataFizzBuzz().main()
-        #data = DataMnist().main()
+    def main(self, data, numbers):
+        #print('Now Deep Learning...,'), 
         
-        print('Training...')
-        seq_nums = Param().generate_seq_nums()
-        params = Param().convert_param(seq_nums)
-
-        model = self.design_network(data, params)
-        self.train_network(data, model, params)
-
-        end = time.time()
-        print((end-start)/60, 'minutes trained model.')
-
-
-    def main2(self, numbers):
-        """
-        For Genetic Algorithm
-        """
-        print('Setting data...')
-        data = DataFizzBuzz().main()
-        #data = DataMnist().main()
-        
-        print('Training...')
         start = time.time()
         
         params = Param().convert_param(numbers)
@@ -56,7 +34,8 @@ class DeepLearning:
 
         end = time.time()
         time_cost = (end-start)/60
-        print(time_cost, 'minutes trained model.')
+        
+        #print('\t Test Accuracy: %s, Time Cost: %s' % (round(log['test_accuracy'], 6), round(time_cost, 6)))
 
         return log['test_accuracy'], time_cost
 
@@ -146,8 +125,8 @@ class DeepLearning:
 
         # Setting
         sess = tf.InteractiveSession()
+        sess.run(tf.global_variables_initializer())
         #tf.initialize_all_variables().run()
-        tf.global_variables_initializer.run()
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
         
         logs = []
@@ -170,14 +149,16 @@ class DeepLearning:
             log = {'epoch': epoch, 'train_loss': train_loss, 'train_accuracy': train_accuracy, 'test_accuracy': test_accuracy}
             logs.append(log)
 
-            if epoch % 100 == 0:
-                std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
-                print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
+            if DEBUG == True:
+                if epoch % 100 == 0:
+                    std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
+                    print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 
         # Save logs
-        dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-        df = pd.DataFrame(logs)
-        df.to_csv("./log/accuracy_and_error_%s.csv"%dt, index=False)
+        if TRAIN_LOG == True:
+            dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+            df = pd.DataFrame(logs)
+            df.to_csv("./log/accuracy_and_error_%s.csv"%dt, index=False)
 
         return logs[-1]
 

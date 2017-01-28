@@ -13,12 +13,7 @@ class Param:
 
 
     def main(self):
-        """
-        ranges = self.get_param_ranges(1)
-        for i in range(len(ranges)):
-            print '%2s %-15s %2s'% (i, ranges[i], random.choice(ranges[i]))
-        """
-        print(self.make_param(1))
+        pass
 
 
     def make_param(self, n_hidden_layer):
@@ -38,7 +33,7 @@ class Param:
         ranges.append(range(0, 1+1))  # 4: Train Optimaize
         ranges.append(range(0, 3+1))  # 5: Learning Rate
         ranges.append(range(0, 2+1))  # 6: Batch Size
-        ranges.append(range(0, 4+1))  # 7: The Number of Iteration, (0, 4+1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ranges.append(range(0, 5+1))  # 7: The Number of Iteration, 5!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ranges.append(range(L, L+1))  # 8: The Number of hidden layer
         
         # 9~: Hidden Layer Design
@@ -52,7 +47,7 @@ class Param:
         return ranges
 
 
-    def convert_param(self, param):
+    def convert_param(self, param, stdout=False):
         params = {}
 
         # 0: Output Weight
@@ -94,7 +89,8 @@ class Param:
         elif param[7] == 1: params['n_iter'] = 10
         elif param[7] == 2: params['n_iter'] = 100
         elif param[7] == 3: params['n_iter'] = 1000
-        elif param[7] == 4: params['n_iter'] = 10000
+        elif param[7] == 4: params['n_iter'] = 5000
+        elif param[7] == 5: params['n_iter'] = 10000
 
         # 8: The Number of hidden layer
         if   param[8] == 0: params['n_h_layer'] = 0
@@ -133,9 +129,10 @@ class Param:
             elif param[idx+5+5*i] == 3: params['h%s_activ'%(i+1)] = 'softmax'
 
         # Dudeg
-        for k in sorted(params):
-            print('%-12s'%k, params[k])
-        print
+        if stdout == True:
+            for k in sorted(params):
+                print('%-12s:'%k, params[k])
+            print
 
         return params
 
