@@ -4,8 +4,6 @@ import sys
 from collections import Counter
 import random
 
-from data_fizzbuzz import DataFizzBuzz
-
 
 class Param:
     def __init__(self):
@@ -33,7 +31,7 @@ class Param:
         ranges.append(range(0, 1+1))  # 4: Train Optimaize
         ranges.append(range(0, 3+1))  # 5: Learning Rate
         ranges.append(range(0, 2+1))  # 6: Batch Size
-        ranges.append(range(0, 5+1))  # 7: The Number of Iteration, 5!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ranges.append(range(0, 2+1))  # 7: The Number of Iteration, 5!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ranges.append(range(L, L+1))  # 8: The Number of hidden layer
         
         # 9~: Hidden Layer Design
@@ -47,7 +45,7 @@ class Param:
         return ranges
 
 
-    def convert_param(self, param, stdout=False):
+    def convert_param(self, param):
         params = {}
 
         # 0: Output Weight
@@ -127,12 +125,6 @@ class Param:
             elif param[idx+5+5*i] == 1: params['h%s_activ'%(i+1)] = 'relu'
             elif param[idx+5+5*i] == 2: params['h%s_activ'%(i+1)] = 'tanh'
             elif param[idx+5+5*i] == 3: params['h%s_activ'%(i+1)] = 'softmax'
-
-        # Dudeg
-        if stdout == True:
-            for k in sorted(params):
-                print('%-12s:'%k, params[k])
-            print
 
         return params
 

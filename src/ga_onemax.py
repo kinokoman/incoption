@@ -16,14 +16,16 @@ class GA:
 
 
     def main(self): 
+        print('Generation  1:'),
         pop = [(-1, p) for p in self.get_population()]
+        fitness = self.evaluate(pop)
+        print(fitness[0])
 
-        for g in range(N_GEN):
-            print 'Generation: ' + str(g)
+        for g in range(N_GEN-1):
+            print('Generation %2s:' % str(g+2)),
 
             # Get elites
-            fitness = self.evaluate(pop)
-            elites = fitness[:int(len(pop)*ELITE_RATE)]
+            elites = fitness[:int(N_POP*ELITE_RATE)]
             
             # Cross and mutate
             pop = elites[:]
@@ -39,11 +41,8 @@ class GA:
             
             # Evaluate indivisual
             fitness = self.evaluate(pop)
-            pop = fitness[:]
-
-            print pop[0]
-            print
-
+            print(fitness[0])
+            
 
     def get_population(self):
         population = []

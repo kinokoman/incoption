@@ -13,12 +13,14 @@ from param import Param
 from deeplearning import DeepLearning
 
 N_ITEMS = 20
-N_POP = 30 #20
-N_GEN = 5 #25
+N_POP = 3 #20
+N_GEN = 2 #25
 MUTATE_PROB = 0.2
 ELITE_RATE = 0.5
 
 N_HIDDEN_LAYER = 1
+
+DEBUG = True
 
 
 class GA:
@@ -32,16 +34,20 @@ class GA:
     def main(self): 
         start = time.time()
         
+        # 1st generation
         pop = [{'param': p} for p in self.get_population()]
+        fitness = self.evaluate(pop)
         
-        for g in range(N_GEN):
-            print('#################### Generation%3s ####################' % str(g)) 
+        # Debug
+        if DEBUG == True:
+            self.debug(1, fitness)
 
+        # After 2nd generation
+        for g in range(N_GEN-1):
             # Get elites
-            fitness = self.evaluate(pop)
-            elites = fitness[:int(len(pop)*ELITE_RATE)]
+            elites = fitness[:int(N_POP*ELITE_RATE)]
 
-            # Cross and mutate
+            # Crossover and mutation
             pop = elites[:]
             while len(pop) < N_POP:
                 if random.random() < MUTATE_PROB:
@@ -53,20 +59,15 @@ class GA:
                     child = self.crossover(elites[c1]['param'], elites[c2]['param'])
                 pop.append({'param': child})
             
-            # Evaluate indivisual
+            # Evaluation
             fitness = self.evaluate(pop)
-            pop = fitness[:]
-
-            # Result
-            for f in fitness:
-                print(f)
-            print()
-            print('BEST: Test Accuracy: %s, Time Cost: %s' % (round(pop[0]['score0'], 6), round(pop[0]['score1'], 6)))
-            params = Param().convert_param(pop[0]['param'], True)
-            print()
+    
+            # Debug
+            if DEBUG == True:
+                self.debug(g+2, fitness)
 
         end = time.time()
-        print('%s minutes cost for deep learning parameter optimization.' % str(int((end-start)/60)))
+        print('%s minutes to optimize deep learning parameter by genetic algorithm.' % str(int((end-start)/60)))
         
 
             
@@ -109,10 +110,9 @@ class GA:
 
         # This generation fitness
         df = pd.DataFrame(fitness)
-        #df = df.sort(['score0', 'score1'], ascending=[False, True])
         df = df.sort_values(['score0', 'score1'], ascending=[False, True])
         fitness = df.to_dict('records')
-        
+
         return fitness
 
 
@@ -133,6 +133,19 @@ class GA:
         child[r1:r2] = parent2[r1:r2]
 
         return child
+
+
+    def debug(self, gen, fitness):
+        print()
+        print('############################## Generation %2s ##############################' % str(gen)) 
+        print()
+        print(pd.DataFrame(fitness)[['score0', 'score1', 'param']])
+        print()
+        print('BEST: Test Accuracy: %s, Time Cost: %s' % (round(fitness[0]['score0'], 6), round(fitness[0]['score1'], 6)))
+        params = Param().convert_param(fitness[0]['param'])
+        for p in sorted(params):
+            print('%-12s:'%p, params[p])
+        print()
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ from param import Param
 
 
 LOG_PATH = '../log/'
-DEBUG = False
+DEBUG = True
 TRAIN_LOG = False
 
 
@@ -150,7 +150,7 @@ class DeepLearning:
             logs.append(log)
 
             if DEBUG == True:
-                if epoch % 100 == 0:
+                if epoch % 1000 == 0:
                     std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
                     print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 

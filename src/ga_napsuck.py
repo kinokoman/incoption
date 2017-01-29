@@ -7,9 +7,9 @@ import operator
 import pandas as pd
 
 N_ITEMS = 20
-N_POP = 20
+N_POP = 30
 N_GEN = 25
-MUTATE_PROB = 0.1
+MUTATE_PROB = 0.3
 ELITE_RATE = 0.5
 
 class GA:
@@ -19,13 +19,15 @@ class GA:
 
 
     def main(self): 
+        print('Generation  1:'), 
         pop = [{'param': p} for p in self.get_population()]
-        
-        for g in range(N_GEN):
-            print('Generation%3s:' % str(g)), 
+        fitness = self.evaluate(pop)
+        print(fitness[0]['score0'], fitness[0]['score1'], fitness[0]['param'])
 
+        for g in range(N_GEN-1):
+            print('Generation %2s:' % str(g+2)),
+            
             # Get elites
-            fitness = self.evaluate(pop)
             elites = fitness[:int(len(pop)*ELITE_RATE)]
 
             # Cross and mutate
@@ -42,9 +44,7 @@ class GA:
             
             # Evaluate indivisual
             fitness = self.evaluate(pop)
-            pop = fitness[:]
-
-            print(pop[0]['score0'], pop[0]['score1'], pop[0]['param'])
+            print(fitness[0]['score0'], fitness[0]['score1'], fitness[0]['param'])
 
             
     def get_population(self):
@@ -94,8 +94,9 @@ class GA:
         # This generation fitness
         df = pd.DataFrame(fitness)
         df = df.sort(['score0', 'score1'], ascending=[False, True])
-
         fitness = df.to_dict('records')
+        
+        #print(df)
         
         return fitness
 
