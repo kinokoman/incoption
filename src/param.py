@@ -31,7 +31,7 @@ class Param:
         ranges.append(range(0, 1+1))  # 4: Train Optimaize
         ranges.append(range(0, 3+1))  # 5: Learning Rate
         ranges.append(range(0, 2+1))  # 6: Batch Size
-        ranges.append(range(0, 2+1))  # 7: The Number of Iteration, 5!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ranges.append(range(0, 3+1))  # 7: The Number of Iteration, exists till 5!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ranges.append(range(L, L+1))  # 8: The Number of hidden layer
         
         # 9~: Hidden Layer Design
@@ -87,8 +87,8 @@ class Param:
         elif param[7] == 1: params['n_iter'] = 10
         elif param[7] == 2: params['n_iter'] = 100
         elif param[7] == 3: params['n_iter'] = 1000
-        elif param[7] == 4: params['n_iter'] = 5000
-        elif param[7] == 5: params['n_iter'] = 10000
+        elif param[7] == 4: params['n_iter'] = 5000   # Not use now
+        elif param[7] == 5: params['n_iter'] = 10000  # Not use now
 
         # 8: The Number of hidden layer
         if   param[8] == 0: params['n_h_layer'] = 0

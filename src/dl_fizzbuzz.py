@@ -52,7 +52,7 @@ class DLFizzBuzz:
         # Answer
         Y_ = tf.placeholder(tf.float32, [None, data[1].shape[1]])
         
-        # Training function
+        # Training functions
         loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(Y, Y_))
         step = tf.train.GradientDescentOptimizer(TRAIN_RATE).minimize(loss)
         

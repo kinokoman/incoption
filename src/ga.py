@@ -12,11 +12,10 @@ from data_mnist import DataMnist
 from param import Param
 from deeplearning import DeepLearning
 
-N_ITEMS = 20
-N_POP = 3 #20
-N_GEN = 2 #25
-MUTATE_PROB = 0.2
-ELITE_RATE = 0.5
+N_POP = 40 #20
+N_GEN = 25 #25
+MUTATE_PROB = 0.5
+ELITE_RATE = 0.25
 
 N_HIDDEN_LAYER = 1
 
