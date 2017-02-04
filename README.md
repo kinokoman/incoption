@@ -1,7 +1,7 @@
 Incoption
 ====
 
-`Incoptin` designs (Deep) Neural Network model automatically and efficiently.
+`Incoption` designs (Deep) Neural Network model automatically and efficiently.
 
 ![pic](inception.jpg)
 
@@ -82,6 +82,7 @@ Passing to `self.data` is the order of `[trian_data, train_label, test_data, tes
 See `data_fizzbuzz.py` for details.
 
 ```python
+# incoption.py
 N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
 N_POP = 40          # Population
@@ -117,4 +118,4 @@ class Incoption:
 
 
 ## Author
-[iShoto](https://github.com/iShoto)
+[Shoto I.](https://github.com/iShoto)
