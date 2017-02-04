@@ -89,5 +89,5 @@ ENV/
 .ropeproject
 
 # etc
-src/log/
-data/
+#src/log/
+#data/
