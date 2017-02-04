@@ -49,7 +49,7 @@ def train_network(self, data, network, params):
 ## Usage
 If you execute it as is, it starts to design the model to solve the FizzBuzz problem, so you leave it.
 
-```
+```sh
 > cd {YOUR-PATH}\incoption\src
 > python incoption.py
 ```
@@ -81,7 +81,7 @@ These parameter settings will be automated in the future.
 Passing to `self.data` is the order of `[trian_data, train_label, test_data, test_label]`.
 See `data_fizzbuzz.py` for details.
 
-```
+```python
 N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
 N_POP = 40          # Population
