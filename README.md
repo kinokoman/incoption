@@ -101,7 +101,8 @@ class Incoption:
 
 ## Install
 ```sh
-> git https://github.com/iShoto/incoption.git
+> cd {YOUR-PATH}
+> git clone https://github.com/iShoto/incoption.git
 ```
 
 
