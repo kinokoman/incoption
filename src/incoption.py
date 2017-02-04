@@ -12,17 +12,16 @@ from data_mnist import DataMnist
 from param import Param
 from deeplearning import DeepLearning
 
-N_POP = 40 #20
-N_GEN = 25 #25
-MUTATE_PROB = 0.5
-ELITE_RATE = 0.25
+N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
-N_HIDDEN_LAYER = 1
+N_POP = 40          # Population
+N_GEN = 25          # The Number of Generation
+MUTATE_PROB = 0.5   # Mutation probability
+ELITE_RATE = 0.25   # Elite rate
 
 DEBUG = True
 
-
-class GA:
+class Incoption:
     def __init__(self):
         self.data = DataFizzBuzz().main()
         #self.data = DataMnist().main()
@@ -30,13 +29,13 @@ class GA:
         self.fitness_master = {}
 
 
-    def main(self): 
+    def main(self):
         start = time.time()
-        
+
         # 1st generation
         pop = [{'param': p} for p in self.get_population()]
         fitness = self.evaluate(pop)
-        
+
         # Debug
         if DEBUG == True:
             self.debug(1, fitness)
@@ -57,19 +56,19 @@ class GA:
                     c2 = random.randint(0, len(elites)-1)
                     child = self.crossover(elites[c1]['param'], elites[c2]['param'])
                 pop.append({'param': child})
-            
+
             # Evaluation
             fitness = self.evaluate(pop)
-    
+
             # Debug
             if DEBUG == True:
                 self.debug(g+2, fitness)
 
         end = time.time()
-        print('%s minutes to optimize deep learning parameter by genetic algorithm.' % str(int((end-start)/60)))
-        
+        print('Took %s minutes.' % str(int((end-start)/60)))
 
-            
+
+
     def get_population(self):
         # Make population
         pop = []
@@ -82,11 +81,11 @@ class GA:
 
     def clac_score(self, indivisual):
         test_accuracy, time_cost = DeepLearning().main(self.data, indivisual)
-            
+
         dic = {}
         dic['score0'] = test_accuracy
         dic['score1'] = time_cost
-        
+
         return dic
 
 
@@ -127,7 +126,7 @@ class GA:
         length = len(parent1)
         r1 = int(math.floor(random.random()*length))
         r2 = r1 + int(math.floor(random.random()*(length-r1)))
-        
+
         child = copy.deepcopy(parent1)
         child[r1:r2] = parent2[r1:r2]
 
@@ -136,7 +135,7 @@ class GA:
 
     def debug(self, gen, fitness):
         print()
-        print('############################## Generation %2s ##############################' % str(gen)) 
+        print('############################## Generation %2s ##############################' % str(gen))
         print()
         print(pd.DataFrame(fitness)[['score0', 'score1', 'param']])
         print()
@@ -148,6 +147,4 @@ class GA:
 
 
 if __name__ == "__main__":
-    GA().main()
-
-
+    Incoption().main()
