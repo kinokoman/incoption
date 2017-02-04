@@ -37,7 +37,7 @@ Although it was a CPU, it worked on Mac when I fixed the following code in `deep
 - Python 2.7.10
 - [tensorflow 0.8.0](https://www.tensorflow.org/get_started/os_setup)
 
-```python:deeplearnig.py
+```python
 # deeplearnig.py
 def train_network(self, data, network, params):
     ...
@@ -81,7 +81,7 @@ These parameter settings will be automated in the future.
 Passing to `self.data` is the order of `[trian_data, train_label, test_data, test_label]`.
 See `data_fizzbuzz.py` for details.
 
-```python:incoption.py
+```python
 N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
 N_POP = 40          # Population
