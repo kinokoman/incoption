@@ -23,8 +23,8 @@ DEBUG = True
 
 class Incoption:
     def __init__(self):
-        #self.data = DataFizzBuzz().main()
-        self.data = DataMnist().main()
+        self.data = DataFizzBuzz().main()
+        #self.data = DataMnist().main()
         self.param_ranges = Param().get_param_ranges(N_HIDDEN_LAYER)
         self.fitness_master = {}
 
