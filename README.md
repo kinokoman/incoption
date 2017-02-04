@@ -19,7 +19,7 @@ But now it's **only FizzBuzz problem** 100%.
 
 ## Requirement
 I have confirmed that it can be used on Windows and Mac.
-I don't confirm it on Linux, but I don't think it will be useless.
+Linux is not confirmed, but I don't think it will be useless.
 
 ### Windows
 - NVIDIA GeForce 1080 x1
@@ -37,7 +37,7 @@ Although it was a CPU, it worked on Mac when I fixed the following code in `deep
 - Python 2.7.10
 - [tensorflow 0.8.0](https://www.tensorflow.org/get_started/os_setup)
 
-```python
+```python:deeplearnig.py
 # deeplearnig.py
 def train_network(self, data, network, params):
     ...
@@ -81,7 +81,7 @@ These parameter settings will be automated in the future.
 Passing to `self.data` is the order of `[trian_data, train_label, test_data, test_label]`.
 See `data_fizzbuzz.py` for details.
 
-```python
+```python:incoption.py
 N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
 N_POP = 40          # Population
