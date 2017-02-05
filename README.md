@@ -42,7 +42,7 @@ Although it was a CPU, it worked on Mac when I fixed the following code in `deep
 def train_network(self, data, network, params):
     ...
     sess.run(tf.global_variables_initializer())  # Comment this for Mac
-    #tf.initialize_all_variables().run()  # Uncommment this for Mac.
+    #tf.initialize_all_variables().run()  # Uncomment this for Mac.
 ```
 
 
