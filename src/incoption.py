@@ -14,19 +14,21 @@ from deeplearning import DeepLearning
 
 N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
-N_POP = 40          # Population
-N_GEN = 25          # The Number of Generation
+N_POP = 4 #40          # Population
+N_GEN = 2 #25          # The Number of Generation
 MUTATE_PROB = 0.5   # Mutation probability
 ELITE_RATE = 0.25   # Elite rate
 
+LOG_PATH = '../log/'
 DEBUG = True
 
 class Incoption:
     def __init__(self):
-        #self.data = DataFizzBuzz().main()
-        self.data = DataMnist().main()
+        self.data = DataFizzBuzz().main()
+        #self.data = DataMnist().main()
         self.param_ranges = Param().get_param_ranges(N_HIDDEN_LAYER)
         self.fitness_master = {}
+        self.ga_log = []
 
 
     def main(self):
@@ -66,7 +68,6 @@ class Incoption:
 
         end = time.time()
         print('Took %s minutes.' % str(int((end-start)/60)))
-
 
 
     def get_population(self):
@@ -144,6 +145,13 @@ class Incoption:
         for p in sorted(params):
             print('%-12s:'%p, params[p])
         print()
+
+        # Log top fitness each generation.
+        top_fitness = fitness[0]
+        top_fitness.update({'gen': gen})
+        self.ga_log.append(top_fitness)
+        df = pd.DataFrame(self.ga_log)
+        df.to_csv(LOG_PATH+'ga_log.csv', index=False)
 
 
 if __name__ == "__main__":
