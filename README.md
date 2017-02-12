@@ -14,12 +14,27 @@ Inception means Deep Neural Network and `Incoption` includes the string "opti" o
 ## Description
 `Incoption` optimizes Deep Learning parameters with Genetic Algorithm.
 In order to achieve high accuracy, it designs the Deep Neural Network model automatically and efficiently.
-But it only verifies with FizzBuzz and MNIST.
+But it was verified with only FizzBuzz and MNIST.
 
-|Problem|Test Accuracy|Time Cost|N Hidden Layer|
-|:--|--:|--:|--:|
-|FizzBuzz|100.0%|101m|1|
-|MNIST|98.2%|976m|1|
+|Score                                 |FizzBuzz        |MNIST                      |
+|:-------------------------------------|---------------:|--------------------------:|
+|Test Accuracy                         |100.0 %         |98.2 %                     |
+|Time Cost                             |101 minutes     |976 minutes                |
+|**Parameter**                         |                |                           |
+|The Number of Hidden Layer            |1               |1                          |
+|The Number of Batch                   |10              |10                         |
+|The Number of Epoch                   |1000            |100                        |
+|1st Hidden Layer's Activation Function|tanh            |relu                       |
+|1st Hidden Layer's Bias               |zeros           |zeros                      |
+|1st Hidden Layer's The Number of Node |100             |100                        |
+|1st Hidden Layer's Standard Deviation |0.1             |0.001                      |
+|1st Hidden Layer's Weight             |trancated normal|trancated normal           |
+|Output Activation Fuction             |-               |-                          |
+|Output Bias                           |zeros           |ones                       |
+|Output Standard Deviation             |0.001           |0.01                       |
+|Output Weight                         |ones            |ones                       |
+|Training Optimaization Function       |Adam Optimizer  |Grandient Descent Optimizer|
+|Training Rate                         |0.1             |0.1                        |
 
 
 ## Requirement
@@ -33,14 +48,15 @@ Linux is not confirmed, but I don't think it will be useless.
 - [Anaconda 4.2.0 64-bit](https://www.continuum.io/downloads)
 - [tensorflow 0.12.0](https://www.tensorflow.org/get_started/os_setup)
 
-The PC with NVIDIA GeForce 1080 which I have is only Windows 10, so I use Python 3.
-Although it was a CPU, it worked on Mac when I fixed the following code in `deeplearnig.py`.
+The PC with NVIDIA GeForce 1080 which I have is only Windows 10 and TensorFlow on Windows supports only Python 3.
 
 ### Mac
 - Intel Core i7 2.9GHz
 - macOS Sierra
 - Python 2.7.10
 - [tensorflow 0.8.0](https://www.tensorflow.org/get_started/os_setup)
+
+Incpotion worked on Mac when I fixed the following code in `deeplearnig.py`.
 
 ```python
 # deeplearnig.py
@@ -52,7 +68,7 @@ def train_network(self, data, network, params):
 
 
 ## Usage
-If you execute it as is, it starts to design the model to solve the FizzBuzz problem, and you leave it.
+If you execute it as is, it starts to design the model to solve the MNIST problem, and you leave it.
 
 ```
 > cd {YOUR-PATH}\incoption\src
@@ -62,29 +78,29 @@ If you execute it as is, it starts to design the model to solve the FizzBuzz pro
 When finished, the best score, Deep Learning parameters and time cost are displayed.
 
 ```
-BEST: Test Accuracy: 1.0, Time Cost: 1.567682
-batch_size  : 10                  # Batch Size
-h1_activ    : tanh                # 1st Hidden Layer's Activation Function
-h1_bias     : zeros               # 1st Hidden Layer's Bias
-h1_n_node   : 100                 # 1st Hidden Layer's The Number of Node
-h1_stddev   : 0.1                 # 1st Hidden Layer's Standard Deviation
-h1_weight   : truncated_normal    # 1st Hidden Layer's Weight
-n_h_layer   : 1                   # The Number of Layer
-n_iter      : 1000                # The Number of Epoch
-o_activ     :                     # Output Activation Fuction
-o_bias      : zeros               # Output Bias
-o_stddev    : 0.001               # Output Standard Deviation
-o_weight    : ones                # Output Weight
-tr_opt      : AdamOptimizer       # Training Optimaization Function
-tr_rate     : 0.1                 # Learning Rate
+BEST: Test Accuracy: 0.982, Time Cost: 9.552549
 
-Took 101 minutes.
+batch_size  : 10                        # The number of Batch
+h1_activ    : relu                      # 1st Hidden Layer's Activation Function
+h1_bias     : zeros                     # 1st Hidden Layer's Bias
+h1_n_node   : 100                       # 1st Hidden Layer's The Number of Node
+h1_stddev   : 0.001                     # 1st Hidden Layer's Standard Deviation
+h1_weight   : truncated_normal          # 1st Hidden Layer's Weight
+n_h_layer   : 100                       # The Number of Layer
+n_iter      : 1                         # The Number of Epoch
+o_activ     :                           # Output Activation Fuction
+o_bias      : ones                      # Output Bias
+o_stddev    : 0.01                      # Output Standard Deviation
+o_weight    : ones                      # Output Weight
+tr_opt      : GradientDescentOptimizer  # Training Optimaization Function
+tr_rate     : 0.1                       # Training Rate
+
+Took 973 minutes.
 ```
 
 If you want to change the parameters or the learning target, edit the following part of `incoption.py`.
-These parameter settings will be automated in the future.
 Passing to `self.data` is the order of `[trian_data, train_label, test_data, test_label]`.
-See `data_fizzbuzz.py` for details.
+See `data_mnist.py` for details.
 
 ```python
 # incoption.py
@@ -99,7 +115,8 @@ DEBUG = True
 
 class Incoption:
     def __init__(self):
-        self.data = DataFizzBuzz().main()
+        #self.data = DataFizzBuzz().main()
+        self.data = DataMnist().main()
         ...
 ```
 
