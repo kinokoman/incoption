@@ -14,8 +14,8 @@ from deeplearning import DeepLearning
 
 N_HIDDEN_LAYER = 1  # The Number of Hidden layer
 
-N_POP = 4 #40          # Population
-N_GEN = 2 #25          # The Number of Generation
+N_POP = 40          # Population
+N_GEN = 25          # The Number of Generation
 MUTATE_PROB = 0.5   # Mutation probability
 ELITE_RATE = 0.25   # Elite rate
 
@@ -24,11 +24,12 @@ DEBUG = True
 
 class Incoption:
     def __init__(self):
-        self.data = DataFizzBuzz().main()
-        #self.data = DataMnist().main()
+        #self.data = DataFizzBuzz().main()
+        self.data = DataMnist().main()
         self.param_ranges = Param().get_param_ranges(N_HIDDEN_LAYER)
         self.fitness_master = {}
         self.ga_log = []
+        self.calc_log = []  # Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     def main(self):
@@ -81,6 +82,11 @@ class Incoption:
 
 
     def clac_score(self, indivisual):
+        # Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.calc_log.append({'param': indivisual})
+        df = pd.DataFrame(self.calc_log)
+        df.to_csv(LOG_PATH+'calc_log.csv', index=False)
+
         test_accuracy, time_cost = DeepLearning().main(self.data, indivisual)
 
         dic = {}
