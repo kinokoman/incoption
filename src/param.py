@@ -86,7 +86,7 @@ class Param:
         if   param[7] == 0: params['n_epoch'] = 1
         elif param[7] == 1: params['n_epoch'] = 10
         elif param[7] == 2: params['n_epoch'] = 100
-        elif param[7] == 3: params['n_epoch'] = 1000
+        elif param[7] == 3: params['n_epoch'] = 1000   # Not use now
         elif param[7] == 4: params['n_epoch'] = 5000   # Not use now
         elif param[7] == 5: params['n_epoch'] = 10000  # Not use now
 

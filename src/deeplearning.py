@@ -49,7 +49,11 @@ class DeepLearning:
         if 'h3_n_node' in params:
             pass
         elif 'h2_n_node' in params:
-            pass
+            X  = tf.placeholder(tf.float32, [None, n_X])
+            H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'])
+            H2 = self.__make_layer(H1, params['h1_n_node'], params['h2_n_node'], params['h2_weight'], params['h2_stddev'], params['h2_bias'], params['h2_activ'])
+            Y  = self.__make_layer(H2, params['h2_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'])
+            Y_ = tf.placeholder(tf.float32, [None, n_Y])
         elif 'h1_n_node' in params:
             X  = tf.placeholder(tf.float32, [None, n_X])
             H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'])

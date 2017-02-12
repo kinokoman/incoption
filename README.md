@@ -87,7 +87,7 @@ h1_n_node   : 100                       # 1st Hidden Layer's The Number of Node
 h1_stddev   : 0.001                     # 1st Hidden Layer's Standard Deviation
 h1_weight   : truncated_normal          # 1st Hidden Layer's Weight
 n_h_layer   : 100                       # The Number of Layer
-n_iter      : 1                         # The Number of Epoch
+n_epoch     : 1                         # The Number of Epoch
 o_activ     :                           # Output Activation Fuction
 o_bias      : ones                      # Output Bias
 o_stddev    : 0.01                      # Output Standard Deviation
