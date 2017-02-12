@@ -14,7 +14,12 @@ Inception means Deep Neural Network and `Incoption` includes the string "opti" o
 ## Description
 `Incoption` optimizes Deep Learning parameters with Genetic Algorithm.
 In order to achieve high accuracy, it designs the Deep Neural Network model automatically and efficiently.
-But now it's **only FizzBuzz problem** 100%.
+But it only verifies with FizzBuzz and MNIST.
+
+|Problem|Test Accuracy|Time Cost|N Hidden Layer|
+|:--|--:|--:|--:|
+|FizzBuzz|100.0%|101m|1|
+|MNIST|98.2%|976m|1|
 
 
 ## Requirement
@@ -47,14 +52,14 @@ def train_network(self, data, network, params):
 
 
 ## Usage
-If you execute it as is, it starts to design the model to solve the FizzBuzz problem, so you leave it.
+If you execute it as is, it starts to design the model to solve the FizzBuzz problem, and you leave it.
 
-```sh
+```
 > cd {YOUR-PATH}\incoption\src
 > python incoption.py
 ```
 
-When finished, the best score, its Deep Learning parameters and the time taken are displayed.
+When finished, the best score, Deep Learning parameters and time cost are displayed.
 
 ```
 BEST: Test Accuracy: 1.0, Time Cost: 1.567682
@@ -100,7 +105,7 @@ class Incoption:
 
 
 ## Install
-```sh
+```
 > cd {YOUR-PATH}
 > git clone https://github.com/iShoto/incoption.git
 ```
