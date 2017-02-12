@@ -130,7 +130,8 @@ class DeepLearning:
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
         
         logs = []
-        for epoch in range(params['n_iter']+1):
+        n_epoch = params['n_epoch']
+        for epoch in range(1, n_epoch+1):
             # Randamize data
             p = np.random.permutation(range(len(train_data)))
             train_data, train_label = train_data[p], train_label[p]
@@ -150,7 +151,7 @@ class DeepLearning:
             logs.append(log)
 
             if DEBUG == True:
-                if epoch % 1000 == 0:
+                if (int(n_epoch/10) != 0 and epoch % int(n_epoch/10) == 0) or int(n_epoch/10) == 0:
                     std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
                     print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 

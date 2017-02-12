@@ -10,9 +10,6 @@ from sklearn.preprocessing import OneHotEncoder
 
 from data_fizzbuzz import DataFizzBuzz
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
-
 
 class Test:
     def __init__(self):
@@ -20,20 +17,24 @@ class Test:
 
 
     def main(self):
-        pass
+        #if epoch % 1000 == 0:
+        N_EPOCH = 1000
+        for epoch in range(N_EPOCH+1):
+            if int(N_EPOCH/10) != 0 and epoch % int(N_EPOCH/10) == 0:
+                print('%s/%s' % (epoch, N_EPOCH))
         
 
     def get_dicts_in_list_from_dataframe(self):
         dict_in_list = [{'x': random.randint(0, 10), 'y': random.randint(1, 5)} for i in range(10)]
         for dil in dict_in_list:
-            print dil
+            print(dil)
 
         df = pd.DataFrame(dict_in_list)
-        print df
+        print(df)
 
         dict_in_list = df.to_dict('records')
         for dil in dict_in_list:
-            print dil
+            print(dil)
 
 
     def multisort(self):
@@ -42,7 +43,7 @@ class Test:
         df = df.sort(['x', 'y'], ascending=[False, True])
         df.reset_index(drop=True, inplace=True)
 
-        print df
+        print(df)
 
 
     def onehotencoder(self):
@@ -155,7 +156,7 @@ class Test:
             elif param[idx+5+5*i] == 3: dic['h%s_activ'%(i+1)] = 'softmax'
 
         for k in sorted(dic):
-            print '%-12s'%k, dic[k]
+            print('%-12s'%k, dic[k])
 
 
     def accuracy(self):
@@ -169,7 +170,7 @@ class Test:
                         [0.0, 0.4, 0.5, 0.1]
                     ])
 
-        print Y
+        print(Y)
 
         Y_ = np.array([
                         [0.0, 0.0, 1.0, 0.0],
@@ -177,29 +178,29 @@ class Test:
                         [0.0, 0.0, 1.0, 0.0]
                     ])
 
-        print Y_
+        print(Y_)
 
         sess = tf.Session()
         
-        print sess.run(tf.argmax(Y, 1))
+        print(sess.run(tf.argmax(Y, 1)))
 
-        print sess.run(tf.argmax(Y_, 1))
+        print(sess.run(tf.argmax(Y_, 1)))
 
 
         eq = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
-        print sess.run(eq)
+        print(sess.run(eq))
 
-        print sess.run(tf.cast(eq, tf.float32))
+        print(sess.run(tf.cast(eq, tf.float32)))
 
-        print sess.run(tf.reduce_mean(tf.cast(eq, tf.float32)))
+        print(sess.run(tf.reduce_mean(tf.cast(eq, tf.float32))))
 
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
-        print sess.run(accuracy)
+        print(sess.run(accuracy))
 
 
         result = np.mean(sess.run(tf.argmax(Y, 1))==sess.run(tf.argmax(Y_, 1)))
-        print sess.run(tf.argmax(Y, 1))==sess.run(tf.argmax(Y_, 1))
-        print result
+        print(sess.run(tf.argmax(Y, 1))==sess.run(tf.argmax(Y_, 1)))
+        print(result)
 
 
 

@@ -19,14 +19,17 @@ N_GEN = 25          # The Number of Generation
 MUTATE_PROB = 0.5   # Mutation probability
 ELITE_RATE = 0.25   # Elite rate
 
+LOG_PATH = '../log/'
 DEBUG = True
 
 class Incoption:
     def __init__(self):
-        self.data = DataFizzBuzz().main()
-        #self.data = DataMnist().main()
+        #self.data = DataFizzBuzz().main()
+        self.data = DataMnist().main()
         self.param_ranges = Param().get_param_ranges(N_HIDDEN_LAYER)
         self.fitness_master = {}
+        self.ga_log = []
+        self.calc_log = []  # Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     def main(self):
@@ -68,7 +71,6 @@ class Incoption:
         print('Took %s minutes.' % str(int((end-start)/60)))
 
 
-
     def get_population(self):
         # Make population
         pop = []
@@ -80,6 +82,11 @@ class Incoption:
 
 
     def clac_score(self, indivisual):
+        # Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.calc_log.append({'param': indivisual})
+        df = pd.DataFrame(self.calc_log)
+        df.to_csv(LOG_PATH+'calc_log.csv', index=False)
+
         test_accuracy, time_cost = DeepLearning().main(self.data, indivisual)
 
         dic = {}
@@ -144,6 +151,13 @@ class Incoption:
         for p in sorted(params):
             print('%-12s:'%p, params[p])
         print()
+
+        # Log top fitness each generation.
+        top_fitness = fitness[0]
+        top_fitness.update({'gen': gen})
+        self.ga_log.append(top_fitness)
+        df = pd.DataFrame(self.ga_log)
+        df.to_csv(LOG_PATH+'ga_log.csv', index=False)
 
 
 if __name__ == "__main__":
