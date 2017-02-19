@@ -1,7 +1,7 @@
 Incoption
 ====
 
-`Incoption` designs (Deep) Neural Network model automatically and efficiently.
+`Incoption` optimizes Deep Learning parameters automatically and efficiently.
 
 ![pic](inception.jpg)
 
@@ -12,9 +12,8 @@ Inception means Deep Neural Network and `Incoption` includes the string "opti" o
 
 
 ## Description
-`Incoption` optimizes Deep Learning parameters with Genetic Algorithm.
-In order to achieve high accuracy, it designs the Deep Neural Network model automatically and efficiently.
-But it was verified with only FizzBuzz and MNIST.
+`Incoption` optimizes Deep Learning parameters to achieve high accuracy with Genetic Algorithm.
+But it was verified with only FizzBuzz and MNIST now.
 
 |Score                               |FizzBuzz        |MNIST                      |
 |:-----------------------------------|---------------:|--------------------------:|
@@ -33,7 +32,7 @@ But it was verified with only FizzBuzz and MNIST.
 |Output Bias                         |zeros           |ones                       |
 |Output Standard Deviation           |0.001           |0.01                       |
 |Output Weight                       |ones            |ones                       |
-|Training Optimaization Function     |Adam Optimizer  |Grandient Descent Optimizer|
+|Training Optimization Function      |Adam Optimizer  |Grandient Descent Optimizer|
 |Training Rate                       |0.1             |0.1                        |
 
 
@@ -80,7 +79,7 @@ o_activ     :                           # Output Activation Fuction
 o_bias      : ones                      # Output Bias
 o_stddev    : 0.01                      # Output Standard Deviation
 o_weight    : ones                      # Output Weight
-tr_opt      : GradientDescentOptimizer  # Training Optimaization Function
+tr_opt      : GradientDescentOptimizer  # Training Optimization Function
 tr_rate     : 0.1                       # Training Rate
 
 Took 973 minutes.
