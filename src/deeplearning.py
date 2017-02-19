@@ -11,11 +11,12 @@ import datetime
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
 from param import Param
+import config
 
-
-LOG_PATH = '../log/'
-DEBUG = True
-TRAIN_LOG = False
+DEBUG = config.DEBUG_DL
+LOG_TRAIN = config.LOG_TRAIN
+LOG_DIR = config.LOG_DIR
+LOG_FILE_TRAIN = config.LOG_FILE_TRAIN
 
 
 class DeepLearning:
@@ -34,7 +35,8 @@ class DeepLearning:
 
         end = time.time()
         time_cost = (end-start)/60
-        
+    
+        print('')        
         #print('\t Test Accuracy: %s, Time Cost: %s' % (round(log['test_accuracy'], 6), round(time_cost, 6)))
 
         return log['test_accuracy'], time_cost
@@ -130,7 +132,6 @@ class DeepLearning:
         # Setting
         sess = tf.InteractiveSession()
         sess.run(tf.global_variables_initializer())
-        #tf.initialize_all_variables().run()
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
         
         logs = []
@@ -141,8 +142,8 @@ class DeepLearning:
             train_data, train_label = train_data[p], train_label[p]
 
             # Training
-            for start in range(0, train_label.shape[0], params['batch_size']):
-                end = start + params['batch_size']
+            for start in range(0, train_label.shape[0], params['n_batch']):
+                end = start + params['n_batch']
                 sess.run(step, feed_dict={X: train_data[start:end], Y_: train_label[start:end]})
             
             # Testing
@@ -160,11 +161,10 @@ class DeepLearning:
                     print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 
         # Save logs
-        if TRAIN_LOG == True:
-            dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        if LOG_TRAIN == True:
             df = pd.DataFrame(logs)
-            df.to_csv("./log/accuracy_and_error_%s.csv"%dt, index=False)
-
+            df.to_csv(LOG_DIR+LOG_FILE_TRAIN, index=False)
+            
         return logs[-1]
 
 

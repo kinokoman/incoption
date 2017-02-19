@@ -78,9 +78,9 @@ class Param:
         elif param[5] == 3: params['tr_rate'] = 0.0001
                 
         # 6: Batch Size
-        if   param[6] == 0: params['batch_size'] = 10
-        elif param[6] == 1: params['batch_size'] = 50
-        elif param[6] == 2: params['batch_size'] = 100
+        if   param[6] == 0: params['n_batch'] = 10
+        elif param[6] == 1: params['n_batch'] = 50
+        elif param[6] == 2: params['n_batch'] = 100
         
         # 7: The Number of Iteration
         if   param[7] == 0: params['n_epoch'] = 1
