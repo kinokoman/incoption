@@ -55,7 +55,7 @@ I don't validate it on Linux but I think that it will works on Linux too.
 
 
 ## Usage
-If you execute it as is, it starts to design the model to solve the MNIST problem, and you leave it.
+If you execute it as is, it starts Deep Learning for the MNIST problem, and you leave it.
 
 ```
 > cd {YOUR-PATH}\incoption\src
