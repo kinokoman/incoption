@@ -11,11 +11,12 @@ import datetime
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
 from param import Param
+import config
 
-
-LOG_PATH = '../log/'
-DEBUG = True
-TRAIN_LOG = False
+DEBUG = config.DEBUG_DL
+LOG_TRAIN = config.LOG_TRAIN
+LOG_DIR = config.LOG_DIR
+LOG_FILE_TRAIN = config.LOG_FILE_TRAIN
 
 
 class DeepLearning:
@@ -160,11 +161,12 @@ class DeepLearning:
                     print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 
         # Save logs
-        if TRAIN_LOG == True:
-            dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        if LOG_TRAIN == True:
+            #dt = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
             df = pd.DataFrame(logs)
-            df.to_csv("./log/accuracy_and_error_%s.csv"%dt, index=False)
-
+            #df.to_csv("./log/accuracy_and_error_%s.csv"%dt, index=False)
+            df.to_csv(LOG_DIR+LOG_FILE_TRAIN, index=False)
+            
         return logs[-1]
 
 
