@@ -94,7 +94,7 @@ If you want to change the learning target or the parameters, edit `config.py`.
 #       Common       #
 ######################
 DATA = 'mnist'                       # Select from 'fizzbuzz', 'mnist'
-LOG_DIR = '../log/'                  # Path to logging
+LOG_DIR = '../log/'                  # Log directory path
 
 
 ######################
