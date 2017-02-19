@@ -151,16 +151,16 @@ class Incoption:
 
 
 	def debug(self, gen, fitness):
-		print()
+		print('')
 		print('############################## Generation %2s ##############################' % str(gen))
-		print()
-		print(pd.DataFrame(fitness)[['score0', 'score1', 'param']])
-		print()
+		print('')
+		print(pd.DataFrame(fitness)[['score0', 'score1', 'param']].to_string())
+		print('')
 		print('BEST: Test Accuracy: %s, Time Cost: %s' % (round(fitness[0]['score0'], 6), round(fitness[0]['score1'], 6)))
 		params = Param().convert_param(fitness[0]['param'])
 		for p in sorted(params):
 			print('%-12s:'%p, params[p])
-		print()
+		print('')
 
 		# Log top fitness each generation.
 		top_fitness = fitness[0]
