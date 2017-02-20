@@ -4,7 +4,7 @@
 #       Common       #
 ######################
 DATA = 'mnist'                       # Select from 'fizzbuzz', 'mnist'
-LOG_DIR = '../log/'                  # Path to logging
+LOG_DIR = '../log/'                  # Log directory path
 
 
 ######################
@@ -26,6 +26,7 @@ LOG_FILE_DETAIL = 'log_detail.csv'   # Log file for detail logging
 #   Deep Learning    #
 ######################
 DEBUG_DL = True                      # Debug for Deep Learning
-LOG_TRAIN = False                    # Log for each training, make this one of method parameter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+MODEL_DIR = '../model/'              # Model directory path
+MODEL_NAME = 'model.ckpt'            # Model name
 LOG_FILE_TRAIN = 'log_train.csv'     # Log file for each training
 

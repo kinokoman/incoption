@@ -14,7 +14,8 @@ from param import Param
 import config
 
 DEBUG = config.DEBUG_DL
-LOG_TRAIN = config.LOG_TRAIN
+MODEL_DIR = config.MODEL_DIR
+MODEL_NAME = config.MODEL_NAME
 LOG_DIR = config.LOG_DIR
 LOG_FILE_TRAIN = config.LOG_FILE_TRAIN
 
@@ -115,7 +116,7 @@ class DeepLearning:
         return loss, train_step
 
 
-    def train_network(self, data, network, params):
+    def train_network(self, data, network, params, save_model=True, log_train=True):
         # data
         train_data  = data[0]
         train_label = data[1]
@@ -160,8 +161,13 @@ class DeepLearning:
                     std_output = 'Epoch: %s, \t Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
                     print(std_output % (log['epoch'], log['train_loss'], log['train_accuracy'], log['test_accuracy']))
 
+        # Save trained model
+        if save_model == True:
+            saver = tf.train.Saver()
+            saver.save(sess, MODEL_DIR+MODEL_NAME)
+
         # Save logs
-        if LOG_TRAIN == True:
+        if log_train == True:
             df = pd.DataFrame(logs)
             df.to_csv(LOG_DIR+LOG_FILE_TRAIN, index=False)
             
