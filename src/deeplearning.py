@@ -34,6 +34,8 @@ class DeepLearning:
         model = self.design_network(data, params)
         log = self.train_network(data, model, params)
 
+        #self.test_network(data, model)
+
         end = time.time()
         time_cost = (end-start)/60
     
@@ -117,13 +119,13 @@ class DeepLearning:
 
 
     def train_network(self, data, network, params, save_model=True, log_train=True):
-        # data
+        # Data
         train_data  = data[0]
         train_label = data[1]
         test_data  = data[2]
         test_label = data[3]
 
-        # model
+        # Model
         X  = network['X']
         Y  = network['Y']
         Y_ = network['Y_']
@@ -172,6 +174,36 @@ class DeepLearning:
             df.to_csv(LOG_DIR+LOG_FILE_TRAIN, index=False)
             
         return logs[-1]
+
+
+    def test_network(self, data, network):
+        # Data
+        train_data  = data[0]
+        train_label = data[1]
+        test_data  = data[2]
+        test_label = data[3]
+
+        # Model
+        X  = network['X']
+        Y  = network['Y']
+        Y_ = network['Y_']
+        loss  = network['loss']
+        step  = network['step']
+
+        # Setting
+        sess = tf.InteractiveSession()
+        saver = tf.train.Saver()
+        saver.restore(sess, MODEL_DIR+MODEL_NAME)
+        accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
+        
+        # Testing
+        train_loss = sess.run(loss, feed_dict={X: train_data, Y_: train_label})
+        train_accuracy = sess.run(accuracy, feed_dict={X: train_data, Y_: train_label})
+        test_accuracy = sess.run(accuracy, feed_dict={X: test_data, Y_: test_label})
+            
+        std_output = 'Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
+        print(std_output % (train_loss, train_accuracy, test_accuracy))
+        
 
 
 if __name__ == "__main__":
