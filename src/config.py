@@ -27,6 +27,11 @@ LOG_FILE_DETAIL = 'log_detail.csv'   # Log file for detail logging
 ######################
 DEBUG_DL = True                      # Debug for Deep Learning
 MODEL_DIR = '../model/'              # Model directory path
-MODEL_NAME = 'model.ckpt'            # Model name
+MODEL_NAME = 'model'            # Model name
 LOG_FILE_TRAIN = 'log_train.csv'     # Log file for each training
 
+######################
+#   BEST PEAMETERS   #
+######################
+if DATA == 'fizzbuzz':
+    BEST_PARAM = [1,2,0,0,1,0,0,3,1,2,3,0,0,2]

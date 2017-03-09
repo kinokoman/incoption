@@ -7,6 +7,7 @@ from collections import Counter
 import tensorflow as tf
 import time
 import datetime
+import os
 
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
@@ -38,12 +39,6 @@ class DeepLearning:
 		return log['test_accuracy'], time_cost
 
 
-	def test(self, data, numbers):
-		params = Param().convert_param(numbers)     
-		model = self.design_network(data, params)
-		self.test_network(data, model)
-
-
 	def design_network(self, data, params):
 		# Set input/output size.
 		n_X = data[0].shape[1]
@@ -54,18 +49,18 @@ class DeepLearning:
 			pass
 		elif 'h2_n_node' in params:
 			X  = tf.placeholder(tf.float32, [None, n_X])
-			H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'])
-			H2 = self.__make_layer(H1, params['h1_n_node'], params['h2_n_node'], params['h2_weight'], params['h2_stddev'], params['h2_bias'], params['h2_activ'])
-			Y  = self.__make_layer(H2, params['h2_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'])
+			H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
+			H2 = self.__make_layer(H1, params['h1_n_node'], params['h2_n_node'], params['h2_weight'], params['h2_stddev'], params['h2_bias'], params['h2_activ'], '2')
+			Y  = self.__make_layer(H2, params['h2_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'], '0')
 			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 		elif 'h1_n_node' in params:
 			X  = tf.placeholder(tf.float32, [None, n_X])
-			H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'])
-			Y  = self.__make_layer(H1, params['h1_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'])
+			H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
+			Y  = self.__make_layer(H1, params['h1_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'], '0')
 			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 		else:
 			X  = tf.placeholder(tf.float32, [None, n_X])
-			Y  = self.__make_layer(X, n_X, n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'])
+			Y  = self.__make_layer(X, n_X, n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'], '0')
 			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 
 		# Select trainer
@@ -76,22 +71,22 @@ class DeepLearning:
 		return network
 
 
-	def __make_layer(self, I, n_input, n_output, weight, std_dev, bias, activ):
+	def __make_layer(self, I, n_input, n_output, weight, std_dev, bias, activ, layer_no):
 		# Weight
 		if weight == 'zeros':
-			W = tf.Variable(tf.zeros([n_input, n_output]))
+			W = tf.Variable(tf.zeros([n_input, n_output]), name='W'+layer_no)
 		elif weight == 'ones':
-			W = tf.Variable(tf.ones([n_input, n_output]))
+			W = tf.Variable(tf.ones([n_input, n_output]), name='W'+layer_no)
 		elif weight == 'random_normal':
-			W = tf.Variable(tf.random_normal([n_input, n_output], stddev=std_dev))
+			W = tf.Variable(tf.random_normal([n_input, n_output], stddev=std_dev), name='W'+layer_no)
 		elif weight == 'truncated_normal':
-			W = tf.Variable(tf.truncated_normal([n_input, n_output], stddev=std_dev))
+			W = tf.Variable(tf.truncated_normal([n_input, n_output], stddev=std_dev), name='W'+layer_no)
 		
 		# Bias
 		if bias == 'zeros':
-			B = tf.Variable(tf.zeros([n_output]))
+			B = tf.Variable(tf.zeros([n_output]), name='B'+layer_no)
 		elif bias == 'ones':
-			B = tf.Variable(tf.ones([n_output]))
+			B = tf.Variable(tf.ones([n_output]), name='B'+layer_no)
 
 		# Activation Function
 		if activ == '':
@@ -102,6 +97,9 @@ class DeepLearning:
 			O = tf.nn.tanh(tf.matmul(I, W) + B)
 		elif activ == 'softmax':
 			O = tf.nn.softmax(tf.matmul(I, W) + B)
+
+		tf.add_to_collection('vars', 'W'+layer_no)
+		tf.add_to_collection('vars', 'B'+layer_no)
 
 		return O
 
@@ -164,6 +162,8 @@ class DeepLearning:
 
 		# Save trained model
 		if save_model == True:
+			for f in os.listdir(MODEL_DIR):
+				os.remove(MODEL_DIR+f)
 			saver = tf.train.Saver()
 			saver.save(sess, MODEL_DIR+MODEL_NAME)
 
@@ -175,6 +175,21 @@ class DeepLearning:
 		return logs[-1]
 
 
+	"""
+	TEST
+	"""
+	def test(self, data, numbers):
+		params = Param().convert_param(numbers)     
+		model = self.design_network(data, params)
+		self.test_network(data, model)
+
+		print('')
+		print('best params  : %s' % str(numbers))
+		print('')
+		for k,v in sorted(params.items()):
+			print('%-13s: %s' % (k, v))
+
+
 	def test_network(self, data, network):
 		# Data
 		train_data  = data[0]
@@ -182,29 +197,20 @@ class DeepLearning:
 		test_data  = data[2]
 		test_label = data[3]
 
-		"""
 		# Model
 		X  = network['X']
 		Y  = network['Y']
 		Y_ = network['Y_']
-		loss = network['loss']
-		step = network['step']
-		"""
 
 		# Setting
 		sess = tf.InteractiveSession()
 		saver = tf.train.Saver()
 		saver.restore(sess, MODEL_DIR+MODEL_NAME)
-		print(1111111111111111111111111)
 		accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1)), tf.float32))
 		
 		# Testing
-		train_loss = sess.run(loss, feed_dict={X: train_data, Y_: train_label})
-		train_accuracy = sess.run(accuracy, feed_dict={X: train_data, Y_: train_label})
 		test_accuracy = sess.run(accuracy, feed_dict={X: test_data, Y_: test_label})
-			
-		std_output = 'Train Loss: %s, \t Train Accuracy: %s, \t Test Accuracy: %s'
-		print(std_output % (train_loss, train_accuracy, test_accuracy))
+		print('Test Accuracy: %s' % test_accuracy)
 		
 
 

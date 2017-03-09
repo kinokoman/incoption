@@ -27,6 +27,8 @@ DEBUG = config.DEBUG_GA
 LOG_FILE_TOP = config.LOG_FILE_TOP
 LOG_FILE_DETAIL = config.LOG_FILE_DETAIL
 
+BEST_PARAM = config.BEST_PARAM
+
 
 class Incoption:
 	def __init__(self):
@@ -38,33 +40,24 @@ class Incoption:
 
 
 	def main(self):
-		#GA().main()
+		GA().main()
 
-		print(1)
 
-		# Read best prameters
-		df = pd.read_csv(LOG_DIR+LOG_FILE_TOP)
-		numbers = df[-1:]['param'].values[0]
-		numbers = [int(a) for a in numbers[1:-1].split(', ')]
-
-		print(numbers)
-		
-		# Train best model and save it
-		DeepLearning().main(self.data, numbers)
-		
-		print(3)
-
-		# Read best model and test it
-		DeepLearning().test(self.data, numbers)
-		
+	def test(self, mode='test'):
 		"""
-		dl = DeepLearning()
-		params = Param().convert_param(numbers)     
-		model = dl.design_network(self.data, params)
-		dl.test_network(self.data, model)
+		Save and restore a model.
+		Set mode to 'train' at first and 'test' at second.
 		"""
-		
+		if mode == 'train':
+			# Train a model with best params and save it
+			DeepLearning().main(self.data, BEST_PARAM)
+		elif mode == 'test':		
+			# Restore the trained model and test it
+			DeepLearning().test(self.data, BEST_PARAM)
+			
+
 
 if __name__ == "__main__":
-	Incoption().main()
+	#Incoption().main()
+	Incoption().test()
 
