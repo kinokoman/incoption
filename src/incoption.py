@@ -43,14 +43,14 @@ class Incoption:
 		GA().main()
 
 
-	def test(self, mode='test'):
+	def test(self, mode='train'):
 		"""
 		Save and restore a model.
 		Set mode to 'train' at first and 'test' at second.
 		"""
 		if mode == 'train':
 			# Train a model with best params and save it
-			DeepLearning().main(self.data, BEST_PARAM)
+			DeepLearning().train(self.data, BEST_PARAM)
 		elif mode == 'test':		
 			# Restore the trained model and test it
 			DeepLearning().test(self.data, BEST_PARAM)
@@ -58,6 +58,6 @@ class Incoption:
 
 
 if __name__ == "__main__":
-	#Incoption().main()
-	Incoption().test()
+	Incoption().main()
+	#Incoption().test()
 

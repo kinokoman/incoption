@@ -30,8 +30,8 @@ class DeepLearning:
 		start = time.time()
 		
 		params = Param().convert_param(numbers)
-		model = self.design_network(data, params)
-		log = self.train_network(data, model, params)
+		model = self.design_model(data, params)
+		log = self.train_model(data, model, params)
 
 		end = time.time()
 		time_cost = (end-start)/60
@@ -39,12 +39,12 @@ class DeepLearning:
 		return log['test_accuracy'], time_cost
 
 
-	def design_network(self, data, params):
+	def design_model(self, data, params):
 		# Set input/output size.
 		n_X = data[0].shape[1]
 		n_Y = data[1].shape[1]
 
-		# Make network from params
+		# Make model from params
 		if 'h3_n_node' in params:
 			pass
 		elif 'h2_n_node' in params:
@@ -66,9 +66,9 @@ class DeepLearning:
 		# Select trainer
 		loss, train_step = self.__select_trainer(Y, Y_, params)
 
-		network = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'step': train_step}
+		model = {'X': X, 'Y': Y, 'Y_': Y_, 'loss': loss, 'step': train_step}
 
-		return network
+		return model
 
 
 	def __make_layer(self, I, n_input, n_output, weight, std_dev, bias, activ, layer_no):
@@ -115,7 +115,7 @@ class DeepLearning:
 		return loss, train_step
 
 
-	def train_network(self, data, network, params, save_model=True, log_train=True):
+	def train_model(self, data, model, params, save_model=False, log_train=False):
 		# Data
 		train_data  = data[0]
 		train_label = data[1]
@@ -123,11 +123,11 @@ class DeepLearning:
 		test_label = data[3]
 
 		# Model
-		X  = network['X']
-		Y  = network['Y']
-		Y_ = network['Y_']
-		loss  = network['loss']
-		step  = network['step']
+		X  = model['X']
+		Y  = model['Y']
+		Y_ = model['Y_']
+		loss  = model['loss']
+		step  = model['step']
 
 		# Setting
 		sess = tf.InteractiveSession()
@@ -176,12 +176,21 @@ class DeepLearning:
 
 
 	"""
+	TRAIN
+	"""
+	def train(self, data, numbers):
+		params = Param().convert_param(numbers)
+		model = self.design_model(data, params)
+		log = self.train_model(data, model, params, save_model=True, log_train=True)
+
+
+	"""
 	TEST
 	"""
 	def test(self, data, numbers):
 		params = Param().convert_param(numbers)     
-		model = self.design_network(data, params)
-		self.test_network(data, model)
+		model = self.design_model(data, params)
+		self.test_model(data, model)
 
 		print('')
 		print('best params  : %s' % str(numbers))
@@ -190,7 +199,7 @@ class DeepLearning:
 			print('%-13s: %s' % (k, v))
 
 
-	def test_network(self, data, network):
+	def test_model(self, data, model):
 		# Data
 		train_data  = data[0]
 		train_label = data[1]
@@ -198,9 +207,9 @@ class DeepLearning:
 		test_label = data[3]
 
 		# Model
-		X  = network['X']
-		Y  = network['Y']
-		Y_ = network['Y_']
+		X  = model['X']
+		Y  = model['Y']
+		Y_ = model['Y_']
 
 		# Setting
 		sess = tf.InteractiveSession()
