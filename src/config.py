@@ -3,7 +3,7 @@
 ######################
 #       Common       #
 ######################
-DATA = 'fizzbuzz'                    # Select from 'fizzbuzz', 'mnist'
+DATA = 'mnist'                    # Select from 'fizzbuzz', 'mnist'
 LOG_DIR = '../log/'                  # Log directory path
 
 

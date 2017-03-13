@@ -46,21 +46,26 @@ class DeepLearning:
 
 		# Make model from params
 		if 'h3_n_node' in params:
-			pass
+			X  = tf.placeholder(tf.float32, [None, n_X])
+			H1 = self.__make_layer(X,  n_X,                 params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
+			H2 = self.__make_layer(H1, params['h1_n_node'], params['h2_n_node'], params['h2_weight'], params['h2_stddev'], params['h2_bias'], params['h2_activ'], '2')
+			H3 = self.__make_layer(H2, params['h2_n_node'], params['h3_n_node'], params['h3_weight'], params['h3_stddev'], params['h3_bias'], params['h3_activ'], '3')
+			Y  = self.__make_layer(H3, params['h3_n_node'], n_Y,                 params['o_weight'],  params['o_stddev'],  params['o_bias'],  params['o_activ'],  '0')
+			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 		elif 'h2_n_node' in params:
 			X  = tf.placeholder(tf.float32, [None, n_X])
-			H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
+			H1 = self.__make_layer(X,  n_X,                 params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
 			H2 = self.__make_layer(H1, params['h1_n_node'], params['h2_n_node'], params['h2_weight'], params['h2_stddev'], params['h2_bias'], params['h2_activ'], '2')
-			Y  = self.__make_layer(H2, params['h2_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'], '0')
+			Y  = self.__make_layer(H2, params['h2_n_node'], n_Y,                 params['o_weight'],  params['o_stddev'],  params['o_bias'],  params['o_activ'],  '0')
 			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 		elif 'h1_n_node' in params:
 			X  = tf.placeholder(tf.float32, [None, n_X])
-			H1 = self.__make_layer(X, n_X, params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
-			Y  = self.__make_layer(H1, params['h1_n_node'], n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'], '0')
+			H1 = self.__make_layer(X,  n_X,                 params['h1_n_node'], params['h1_weight'], params['h1_stddev'], params['h1_bias'], params['h1_activ'], '1')
+			Y  = self.__make_layer(H1, params['h1_n_node'], n_Y,                 params['o_weight'],  params['o_stddev'],  params['o_bias'],  params['o_activ'],  '0')
 			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 		else:
 			X  = tf.placeholder(tf.float32, [None, n_X])
-			Y  = self.__make_layer(X, n_X, n_Y, params['o_weight'], params['o_stddev'], params['o_bias'], params['o_activ'], '0')
+			Y  = self.__make_layer(X,  n_X,                 n_Y,                 params['o_weight'],  params['o_stddev'],  params['o_bias'],  params['o_activ'],  '0')
 			Y_ = tf.placeholder(tf.float32, [None, n_Y])
 
 		# Select trainer

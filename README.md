@@ -99,7 +99,7 @@ LOG_DIR = '../log/'                  # Log directory path
 ######################
 #  Genetic Algrithm  #
 ######################
-N_HIDDEN_LAYER = 2                   # The Number of Hidden layer
+N_HIDDEN_LAYER = 1                   # The Number of Hidden layer
 
 N_POP = 40                           # Population
 N_GEN = 25                           # The Number of Generation
