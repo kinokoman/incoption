@@ -15,25 +15,25 @@ Inception means Deep Neural Network and `Incoption` includes the string "opti" o
 `Incoption` optimizes Deep Learning parameters to achieve high accuracy with Genetic Algorithm.
 But it was verified with only FizzBuzz and MNIST now.
 
-|Score                               |FizzBuzz        |MNIST                      |
-|:-----------------------------------|---------------:|--------------------------:|
-|Test Accuracy                       |100.0 %         |98.2 %                     |
-|Time Cost                           |101 minutes     |976 minutes                |
-|**Parameter**                       |                |                           |
-|The Number of Hidden Layer          |1               |1                          |
-|The Number of Batch                 |10              |10                         |
-|The Number of Epoch                 |1000            |100                        |
-|1st Hidden Layer Activation Function|tanh            |relu                       |
-|1st Hidden Layer Bias               |zeros           |zeros                      |
-|1st Hidden Layer The Number of Node |100             |100                        |
-|1st Hidden Layer Standard Deviation |0.1             |0.001                      |
-|1st Hidden Layer Weight             |trancated normal|trancated normal           |
-|Output Activation Fuction           |-               |-                          |
-|Output Bias                         |zeros           |ones                       |
-|Output Standard Deviation           |0.001           |0.01                       |
-|Output Weight                       |ones            |ones                       |
-|Training Optimization Function      |Adam Optimizer  |Grandient Descent Optimizer|
-|Training Rate                       |0.1             |0.1                        |
+|Score                                      |FizzBuzz         |MNIST                       |
+|:------------------------------------------|----------------:|---------------------------:|
+|Test Accuracy                              |100.0 %          |98.2 %                      |
+|Time Cost                                  |101 minutes      |976 minutes                 |
+|**Parameter**                              |                 |                            |
+|The Number of Hidden Layer                 |1                |1                           |
+|The Number of Batch                        |10               |10                          |
+|The Number of Epoch                        |1000             |100                         |
+|1st Hidden Layer The Number of Node        |100              |100                         |
+|1st Hidden Layer Weight Standard Deviation |0.1              |0.001                       |
+|1st Hidden Layer Weight                    |trancated normal |trancated normal            |
+|1st Hidden Layer Bias                      |zeros            |zeros                       |
+|1st Hidden Layer Activation Function       |tanh             |relu                        |
+|Output Weight                              |ones             |ones                        |
+|Output Weight Standard Deviation           |0.001            |0.01                        |
+|Output Bias                                |zeros            |ones                        |
+|Output Activation Fuction                  |-                |-                           |
+|Training Optimization Function             |Adam Optimizer   |Grandient Descent Optimizer |
+|Training Rate                              |0.1              |0.1                         |
 
 
 ## Requirement
