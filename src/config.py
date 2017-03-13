@@ -3,14 +3,14 @@
 ######################
 #       Common       #
 ######################
-DATA = 'mnist'                       # Select from 'fizzbuzz', 'mnist'
+DATA = 'mnist'                    # Select from 'fizzbuzz', 'mnist'
 LOG_DIR = '../log/'                  # Log directory path
 
 
 ######################
 #  Genetic Algrithm  #
 ######################
-N_HIDDEN_LAYER = 2                   # The Number of Hidden layer, make this a value range not a value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+N_HIDDEN_LAYER = 1                   # The Number of Hidden layer, make this a value range not a value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 N_POP = 40                           # Population
 N_GEN = 25                           # The Number of Generation
@@ -27,6 +27,11 @@ LOG_FILE_DETAIL = 'log_detail.csv'   # Log file for detail logging
 ######################
 DEBUG_DL = True                      # Debug for Deep Learning
 MODEL_DIR = '../model/'              # Model directory path
-MODEL_NAME = 'model.ckpt'            # Model name
+MODEL_NAME = 'model'                 # Model name
 LOG_FILE_TRAIN = 'log_train.csv'     # Log file for each training
 
+######################
+#   BEST PEAMETERS   #
+######################
+if DATA == 'fizzbuzz':
+    BEST_PARAM = [1,2,0,0,1,0,0,3,1,2,3,0,0,2]
