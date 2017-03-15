@@ -113,12 +113,12 @@ See `data_mnist.py` for details.
 
 ```python
 class Incoption:
-	def __init__(self):
-		# Data
-		if DATA == 'fizzbuzz':
-			self.data = DataFizzBuzz().main()
-		elif DATA == 'mnist':
-			self.data = DataMnist().main()
+    def __init__(self):
+        # Data
+        if DATA == 'fizzbuzz':
+            self.data = DataFizzBuzz().main()
+        elif DATA == 'mnist':
+            self.data = DataMnist().main()
         ...
 ```
 

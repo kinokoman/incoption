@@ -9,6 +9,7 @@ import time
 
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
+from data_cifar10 import DataCifar10
 from param import Param
 from deeplearning import DeepLearning
 from ga import GA
@@ -32,11 +33,7 @@ BEST_PARAM = config.BEST_PARAM
 
 class Incoption:
 	def __init__(self):
-		# Data
-		if DATA == 'fizzbuzz':
-			self.data = DataFizzBuzz().main()
-		elif DATA == 'mnist':
-			self.data = DataMnist().main()
+		pass
 
 
 	def main(self):
@@ -48,6 +45,14 @@ class Incoption:
 		Save and restore a model.
 		Set mode to 'train' at first and 'test' at second.
 		"""
+		# Data
+		if DATA == 'fizzbuzz':
+			self.data = DataFizzBuzz().main()
+		elif DATA == 'mnist':
+			self.data = DataMnist().main()
+		elif DATA == 'cifar10':
+			self.data = DataCifar10().main()
+			
 		if mode == 'train':
 			# Train a model with best params and save it
 			DeepLearning().train(self.data, BEST_PARAM)

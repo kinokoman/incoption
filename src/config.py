@@ -3,7 +3,7 @@
 ######################
 #       Common       #
 ######################
-DATA = 'mnist'                    # Select from 'fizzbuzz', 'mnist'
+DATA = 'cifar10'                     # Select from 'fizzbuzz', 'mnist', 'cifar10'
 LOG_DIR = '../log/'                  # Log directory path
 
 
@@ -30,10 +30,13 @@ MODEL_DIR = '../model/'              # Model directory path
 MODEL_NAME = 'model'                 # Model name
 LOG_FILE_TRAIN = 'log_train.csv'     # Log file for each training
 
+
 ######################
 #   BEST PEAMETERS   #
 ######################
 if DATA == 'fizzbuzz':
     BEST_PARAM = [1,2,0,0,1,0,0,3,1,2,3,0,0,2]
 elif DATA == 'mnist':
+    BEST_PARAM = [1,2,0,0,1,0,0,3,1,2,3,0,0,2]  # fake
+elif DATA == 'cifar10':
     BEST_PARAM = [1,2,0,0,1,0,0,3,1,2,3,0,0,2]  # fake

@@ -1,9 +1,5 @@
 # coding: utf-8
 
-import sys
-import pandas as pd
-import numpy as np
-from collections import Counter
 import cPickle
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
@@ -18,22 +14,24 @@ class DataCifar10:
 
 
 	def main(self):		
-		# Train
+		# Training
 		train_data = np.empty((0,3072))
 		train_label = np.empty((0,10))
 		for i in range(1, 6):
 			print('read %s' % FILE_TRAIN%i)
-
+			# data
 			train_data_1 = self.unpickle(DIR+FILE_TRAIN%i)['data']
 			train_data = np.concatenate((train_data, train_data_1), axis=0)
-			
+			# labels
 			train_label_1 = self.unpickle(DIR+FILE_TRAIN%i)['labels']
 			train_label_1 = self.onehot(train_label_1)
 			train_label = np.concatenate((train_label, train_label_1), axis=0)
 
-		# Test
+		# Testing
 		print('read %s' % FILE_TEST)
+		# data
 		test_data = self.unpickle(DIR+FILE_TEST)['data']
+		# labels
 		test_label = self.unpickle(DIR+FILE_TEST)['labels']
 		test_label = self.onehot(test_label)
 		
@@ -41,6 +39,23 @@ class DataCifar10:
 		data = [train_data, train_label, test_data, test_label]
 
 		return data
+
+
+	def unpickle(self, f):
+		fo = open(f, 'rb')
+		d = cPickle.load(fo)
+		fo.close()
+
+		return d
+
+
+	def onehot(self, X):
+		X = np.array(X).reshape(1, -1)
+		X = X.transpose()
+		encoder = OneHotEncoder(n_values=max(X)+1)
+		X = encoder.fit_transform(X).toarray()
+
+		return X
 
 
 	def test(self):
@@ -60,23 +75,6 @@ class DataCifar10:
 		print('Test Labels %s records' % len(data[3]))
 		print(data[3])		
 		print('')
-
-
-	def unpickle(self, f):
-		fo = open(f, 'rb')
-		d = cPickle.load(fo)
-		fo.close()
-
-		return d
-
-
-	def onehot(self, X):
-		X = np.array(X).reshape(1, -1)
-		X = X.transpose()
-		encoder = OneHotEncoder(n_values=max(X)+1)
-		X = encoder.fit_transform(X).toarray()
-
-		return X
 
 
 if __name__ == "__main__":

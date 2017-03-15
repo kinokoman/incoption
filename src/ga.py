@@ -9,6 +9,7 @@ import time
 
 from data_fizzbuzz import DataFizzBuzz
 from data_mnist import DataMnist
+from data_cifar10 import DataCifar10
 from param import Param
 from deeplearning import DeepLearning
 import config
@@ -34,6 +35,8 @@ class GA:
 			self.data = DataFizzBuzz().main()
 		elif DATA == 'mnist':
 			self.data = DataMnist().main()
+		elif DATA == 'cifar10':
+			self.data = DataCifar10().main()
 
 		# Parameters
 		self.param_ranges = Param().get_param_ranges(N_HIDDEN_LAYER)
