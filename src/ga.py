@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import random
 import math
 import copy
@@ -98,10 +97,11 @@ class GA:
 
 	def clac_score(self, indivisual):
 		# Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		"""
 		self.log_detail.append({'param': indivisual})
 		df = pd.DataFrame(self.log_detail)
 		df.to_csv(LOG_DIR+LOG_FILE_DETAIL, index=False)
-
+		"""
 		test_accuracy, time_cost = DeepLearning().main(self.data, indivisual)
 
 		dic = {}

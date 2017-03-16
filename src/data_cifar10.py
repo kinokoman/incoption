@@ -1,6 +1,7 @@
 # coding: utf-8
 
-import cPickle
+#import cPickle
+import _pickle as cPickle
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 
@@ -43,7 +44,7 @@ class DataCifar10:
 
 	def unpickle(self, f):
 		fo = open(f, 'rb')
-		d = cPickle.load(fo)
+		d = cPickle.load(fo, encoding='latin1')
 		fo.close()
 
 		return d
@@ -62,22 +63,21 @@ class DataCifar10:
 		data = self.main()
 		
 		print('')
-		print('Training Data %s records' % len(data[0]))
+		print('Training Data: %s columns, %s records' % (data[0].shape[1], data[0].shape[0]))
 		print(data[0])
 		print('')
-		print('Training Labels %s records' % len(data[1]))
+		print('Training Labels: %s columns, %s records' % (data[1].shape[1], data[1].shape[0]))
 		print(data[1])
 		print('')
 
-		print('Test Data %s records' % len(data[2]))
+		print('Test Data: %s columns, %s records' % (data[2].shape[1], data[2].shape[0]))
 		print(data[2])
 		print('')
-		print('Test Labels %s records' % len(data[3]))
+		print('Test Labels: %s columns, %s records' % (data[3].shape[1], data[3].shape[0]))
 		print(data[3])		
 		print('')
 
 
 if __name__ == "__main__":
-	#DataCifar10().main()
 	DataCifar10().test()
 

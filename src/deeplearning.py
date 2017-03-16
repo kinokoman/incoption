@@ -121,6 +121,10 @@ class DeepLearning:
 
 
 	def train_model(self, data, model, params, save_model=False, log_train=False):
+		if DEBUG == True:
+			for k,v in sorted(params.items()):
+				print('%-10s: %s' % (k,v))
+
 		# Data
 		train_data  = data[0]
 		train_label = data[1]
@@ -147,8 +151,9 @@ class DeepLearning:
 			train_data, train_label = train_data[p], train_label[p]
 
 			# Training
-			for start in range(0, train_label.shape[0], params['n_batch']):
-				end = start + params['n_batch']
+			n_record = train_label.shape[0]
+			for start in range(0, n_record, int(n_record*params['n_batch'])):
+				end = start + int(n_record*params['n_batch'])
 				sess.run(step, feed_dict={X: train_data[start:end], Y_: train_label[start:end]})
 			
 			# Testing
