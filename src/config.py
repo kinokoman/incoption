@@ -3,7 +3,7 @@
 ######################
 #       Common       #
 ######################
-DATA = 'cifar10'                     # Select from 'fizzbuzz', 'mnist', 'cifar10'
+DATA = 'mnist'#'cifar10'                     # Select from 'fizzbuzz', 'mnist', 'cifar10'
 LOG_DIR = '../log/'                  # Log directory path
 
 
@@ -12,10 +12,12 @@ LOG_DIR = '../log/'                  # Log directory path
 ######################
 N_HIDDEN_LAYER = 1                   # The Number of Hidden layer, make this a value range not a value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-N_POP = 40                           # Population
-N_GEN = 25                           # The Number of Generation
+N_POP = 4#40                           # Population
+N_GEN = 2#25                           # The Number of Generation
 MUTATE_PROB = 0.5                    # Mutation probability
 ELITE_PROB = 0.25                    # Elite probability
+
+CROSSOVER_TYPE = 'uniform'           # select from 'two-point', 'uniform'
 
 DEBUG_GA = True                      # Debug for Genetic Algorithm
 LOG_FILE_TOP = 'log_top.csv'         # Log file for top of each generation

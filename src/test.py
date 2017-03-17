@@ -10,6 +10,7 @@ from sklearn.preprocessing import OneHotEncoder
 import os
 import glob
 import time
+import copy
 
 from data_fizzbuzz import DataFizzBuzz
 
@@ -20,8 +21,24 @@ class Test:
 
 
 	def main(self):
-		pass
-		
+		n_gene = 11
+		parent1 = [random.randint(0, 3) for i in range(n_gene)]
+		parent2 = [random.randint(0, 3) for i in range(n_gene)]
+
+		sample = random.sample(range(n_gene), n_gene/2)
+		sample.sort()
+
+		child = copy.deepcopy(parent1)
+		for s in sample:
+			child[s] = parent2[s]
+	
+
+		print(parent1)
+		print(parent2)
+		print(sample)
+		print(child)
+
+
 
 	def save_n_restore_model(self):
 		data = DataFizzBuzz().main()

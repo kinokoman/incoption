@@ -25,22 +25,22 @@ class Param:
         ranges = []
         
         ranges.append(range(0, 3+1))  # 0: Output Weight
-        ranges.append(range(0, 3+1))  # 1: Output Standard deviation
+        ranges.append(range(0, 3+1))  # 1: Output Weight Standard deviation
         ranges.append(range(0, 1+1))  # 2: Output Bias
         ranges.append(range(0, 0+1))  # 3: Output Activation Function
-        ranges.append(range(0, 1+1))  # 4: Train Optimaize
-        ranges.append(range(0, 3+1))  # 5: Learning Rate
-        ranges.append(range(0, 2+1))  # 6: Batch Size
+        ranges.append(range(0, 1+1))  # 4: Training Optimaize
+        ranges.append(range(0, 3+1))  # 5: Training Rate
+        ranges.append(range(0, 2+1))  # 6: The Number of Batch
         ranges.append(range(0, 2+1))  # 7: The Number of Epoch, exists till 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ranges.append(range(L, L+1))  # 8: The Number of hidden layer
         
         # 9~: Hidden Layer Design
         for i in range(L):
             ranges.append(range(0, 2+1))  # The Number of Node
-            ranges.append(range(0, 3+1))  # Output Weight
-            ranges.append(range(0, 3+1))  # Output Standard Deviation
-            ranges.append(range(0, 1+1))  # Output Bias
-            ranges.append(range(0, 3+1))  # Output Activation Function
+            ranges.append(range(0, 3+1))  # Hidden Weight
+            ranges.append(range(0, 3+1))  # Hidden Weight Standard Deviation
+            ranges.append(range(0, 1+1))  # Hidden Bias
+            ranges.append(range(0, 3+1))  # Hidden Activation Function
 
         return ranges
 
@@ -78,14 +78,9 @@ class Param:
         elif param[5] == 3: params['tr_rate'] = 0.0001
                 
         # 6: The number of Batch
-        """
-        if   param[6] == 0: params['n_batch'] = 10
-        elif param[6] == 1: params['n_batch'] = 50
-        elif param[6] == 2: params['n_batch'] = 100
-        """
-        if   param[6] == 0: params['n_batch'] = 0.01
+        if   param[6] == 0: params['n_batch'] = 0.10
         elif param[6] == 1: params['n_batch'] = 0.05
-        elif param[6] == 2: params['n_batch'] = 0.10
+        elif param[6] == 2: params['n_batch'] = 0.01
         
         # 7: The Number of Epoch
         if   param[7] == 0: params['n_epoch'] = 1

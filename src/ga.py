@@ -21,6 +21,8 @@ N_GEN = config.N_GEN
 MUTATE_PROB = config.MUTATE_PROB
 ELITE_PROB = config.ELITE_PROB
 
+CROSSOVER_TYPE = config.CROSSOVER_TYPE
+
 LOG_DIR = config.LOG_DIR
 DEBUG = config.DEBUG_GA
 LOG_FILE_TOP = config.LOG_FILE_TOP
@@ -97,11 +99,12 @@ class GA:
 
 	def clac_score(self, indivisual):
 		# Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		"""
+		#"""
 		self.log_detail.append({'param': indivisual})
 		df = pd.DataFrame(self.log_detail)
 		df.to_csv(LOG_DIR+LOG_FILE_DETAIL, index=False)
-		"""
+		#"""
+		
 		test_accuracy, time_cost = DeepLearning().main(self.data, indivisual)
 
 		dic = {}
@@ -146,12 +149,21 @@ class GA:
 
 
 	def crossover(self, parent1, parent2):
-		length = len(parent1)
-		r1 = int(math.floor(random.random()*length))
-		r2 = r1 + int(math.floor(random.random()*(length-r1)))
+		if CROSSOVER_TYPE == 'two-point':
+			length = len(parent1)
+			r1 = int(math.floor(random.random()*length))
+			r2 = r1 + int(math.floor(random.random()*(length-r1)))
 
-		child = copy.deepcopy(parent1)
-		child[r1:r2] = parent2[r1:r2]
+			child = copy.deepcopy(parent1)
+			child[r1:r2] = parent2[r1:r2]
+		
+		elif CROSSOVER_TYPE == 'uniform':
+			sample = random.sample(range(len(parent1)), int(len(parent1)/2))
+			sample.sort()
+
+			child = copy.deepcopy(parent1)
+			for s in sample:
+				child[s] = parent2[s]
 
 		return child
 
