@@ -21,6 +21,10 @@ class Test:
 
 
 	def main(self):
+		pass
+
+
+	def uniform_crossover(self):
 		n_gene = 11
 		parent1 = [random.randint(0, 3) for i in range(n_gene)]
 		parent2 = [random.randint(0, 3) for i in range(n_gene)]
@@ -32,7 +36,6 @@ class Test:
 		for s in sample:
 			child[s] = parent2[s]
 	
-
 		print(parent1)
 		print(parent2)
 		print(sample)

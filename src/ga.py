@@ -74,7 +74,12 @@ class GA:
 					c1 = random.randint(0, len(elites)-1)
 					c2 = random.randint(0, len(elites)-1)
 					child = self.crossover(elites[c1]['param'], elites[c2]['param'])
-				pop.append({'param': child})
+
+				# Add a child that was not existed former generations.
+				df_pop = pd.DataFrame(pop)
+				df_pop['param'] = df_pop['param'].astype(str)
+				if len(df_pop.ix[df_pop['param']==str(child)]) == 0:
+					pop.append({'param': child})
 
 			# Evaluation
 			fitness = self.evaluate(pop)
